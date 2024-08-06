@@ -79,11 +79,23 @@ const Tree = () => {
 
   const treeData = createTreeData(nodes);
 
+  const displayNodes = (nodes) => {
+    return nodes.map((node, index) => (
+      <span key={index}>
+        {node.value}
+        {index < nodes.length - 1 && ' | '}
+      </span>
+    ));
+  };
+
   return (
     <div>
       <h2>Preparation for Quiz QHP</h2>
       <p>Perform the BUILD-MAX-HEAP algorithm on the following array of numbers. Then click the "Show Answer" button to check your work.</p>
       <p>Reload the page at any time to generate a new practice quiz.</p>
+      <h3 style={{ textAlign: 'center' }}>
+        {displayNodes(nodes)}
+      </h3>
       <div className="tree">
         {treeData && (
           <TreeNode
@@ -96,7 +108,9 @@ const Tree = () => {
         )}
       </div>
       {showAnswer && <p><strong>{isCorrect ? 'Correct!' : 'Incorrect, please try again.'}</strong></p>}
-      <button onClick={handleShowAnswer}>Show Answer</button>
+      <div className="button-container">
+        <button className="styled-button" onClick={handleShowAnswer}>Show Answer</button>
+      </div>
     </div>
   );
 };
