@@ -1,12 +1,12 @@
 import React from 'react';
+import Tree from '../components/Tree';
 
 const Qhp = () => {
   return (
     <div>
-      <h2>Qhp</h2>
-      <p>Learn more about Qhp.</p>
+      <Tree />
     </div>
-  );
+  )
 };
 
 export default Qhp;
