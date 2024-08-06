@@ -2,7 +2,15 @@ import React, { useState, useCallback } from 'react';
 import update from 'immutability-helper';
 import TreeNode from './TreeNode';
 
-const initialArray = [7, 12, 15, 6, 13, 3, 14, 10, 11, 5, 2, 1, 8, 9, 4];
+const generateRandomArray = () => {
+  const minLength = 10;
+  const maxLength = 15;
+  const length = Math.floor(Math.random() * (maxLength - minLength + 1)) + minLength;
+  const maxValue = 30;
+  const array = Array.from({ length: maxValue }, (_, i) => i + 1);
+  array.sort(() => Math.random() - 0.5);
+  return array.slice(0, length);
+};
 
 const buildMaxHeap = (array) => {
   const n = array.length;
@@ -47,7 +55,7 @@ const createTreeData = (nodes) => {
 };
 
 const Tree = () => {
-  const [nodes, setNodes] = useState(initialArray.map((value, index) => ({ id: index, value })));
+  const [nodes, setNodes] = useState(generateRandomArray().map((value, index) => ({ id: index, value })));
   const [showAnswer, setShowAnswer] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
