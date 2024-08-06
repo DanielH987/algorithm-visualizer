@@ -102,3 +102,61 @@ footer {
     display: flex;
   }
 }
+
+.tree {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.tree-node-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.tree-node {
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tree-node:hover {
+  background-color: #f0f0f0;
+}
+
+.tree-children {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tree-children::before, .tree-children::after {
+  content: '';
+  position: absolute;
+  width: 50%;
+  top: -20px;
+  border-top: 1px solid #ccc;
+}
+
+.tree-children::before {
+  left: 0;
+  border-right: 1px solid #ccc;
+}
+
+.tree-children::after {
+  right: 0;
+  border-left: 1px solid #ccc;
+}
