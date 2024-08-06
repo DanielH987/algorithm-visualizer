@@ -1,57 +1,104 @@
-nav ul {
-  list-style-type: none;
+body {
+  font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
-  background-color: #f3f3f3;
+  box-sizing: border-box;
 }
 
-nav ul li {
-  display: inline;
-  margin-right: 10px;
-}
-
-nav ul li a {
-  text-decoration: none;
-  color: black;
-  padding: 10px;
-  display: inline-block;
-}
-
-.App {
+header {
+  background-color: #333;
+  color: white;
+  padding: 1em;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+nav {
+  background-color: #333;
+  position: relative;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+nav ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
+}
+
+nav ul li {
+  margin: 0;
+}
+
+nav ul li a {
   color: white;
+  padding: 1em;
+  display: block;
+  text-decoration: none;
 }
 
-.App-link {
-  color: #61dafb;
+nav ul li a:hover {
+  background-color: #575757;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
+main {
+  padding: 1em;
+}
+
+footer {
+  background-color: #333;
+  color: white;
+  padding: 1em;
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+
+/* Responsive styling */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  cursor: pointer;
+  padding-bottom: 1em;
+}
+
+.hamburger div {
+  width: 30px;
+  height: 3px;
+  background-color: white;
+  margin: 5px;
+  transition: all 0.3s ease;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.hamburger.open div:nth-child(1) {
+  transform: rotate(45deg) translate(9px, 9px);
+}
+
+.hamburger.open div:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open div:nth-child(3) {
+  transform: rotate(-45deg) translate(9px, -9px);
+}
+
+@media (max-width: 768px) {
+  nav ul {
+    flex-direction: column;
+    display: none;
+    position: absolute;
+    top: 50px;
+    width: 100%;
+    background-color: #333;
   }
-  to {
-    transform: rotate(360deg);
+
+  nav ul.show {
+    display: flex;
+  }
+
+  .hamburger {
+    display: flex;
   }
 }
