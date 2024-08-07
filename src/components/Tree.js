@@ -65,6 +65,8 @@ const Tree = () => {
     const initialNodes = generateRandomArray().map((value, index) => ({ id: index, value }));
     setOriginalNodes(initialNodes);
     setNodes(initialNodes);
+    const heapArray = buildMaxHeap(initialNodes.map(node => node.value));
+    setCorrectOrder(heapArray);
   }, []);
 
   const moveNode = useCallback(
@@ -74,18 +76,17 @@ const Tree = () => {
         [toIndex]: { $set: nodes[fromIndex] },
       });
       setNodes(updatedNodes);
+      verifyAnswer(updatedNodes);
     },
     [nodes],
   );
 
   const handleShowAnswer = () => {
-    const heapArray = buildMaxHeap(nodes.map(node => node.value));
-    setCorrectOrder(heapArray);
     setShowAnswer(true);
   };
 
-  const verifyAnswer = () => {
-    const currentValues = nodes.map(node => node.value);
+  const verifyAnswer = (currentNodes) => {
+    const currentValues = currentNodes.map(node => node.value);
     const isCorrectOrder = JSON.stringify(currentValues) === JSON.stringify(correctOrder);
     setIsCorrect(isCorrectOrder);
   };
@@ -125,11 +126,16 @@ const Tree = () => {
           />
         )}
       </div>
-      <h3><strong>{isCorrect ? 'Correct!' : 'Incorrect, please try again.'}</strong></h3>
-      {showAnswer && <h3>Correct Order: {displayCorrectOrder(correctOrder)}</h3>}
+      <h3 className='correct'>
+        <strong>{isCorrect ? 'Correct!' : ''}</strong>
+      </h3>
+      {showAnswer && 
+        <h3 className={isCorrect ? 'correct' : 'incorrect'}>
+          {displayCorrectOrder(correctOrder)}
+        </h3>
+      }
       <div className="button-container">
         {!showAnswer && <button className="styled-button" onClick={handleShowAnswer}>Show Answer</button>}
-        <button className="styled-button" onClick={verifyAnswer}>Verify Answer</button>
       </div>
     </div>
   );
