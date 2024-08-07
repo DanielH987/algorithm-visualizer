@@ -17,6 +17,8 @@ const QuicksortPartition = () => {
     const [originalArray, setOriginalArray] = useState([]);
     const [highlightedIndex, setHighlightedIndex] = useState(null);
     const [answer, setAnswer] = useState('');
+    const [isCorrect, setIsCorrect] = useState(false);
+    const [showAnswerButton, setShowAnswerButton] = useState(true);
 
     useEffect(() => {
         const array = generateRandomArray();
@@ -29,6 +31,7 @@ const QuicksortPartition = () => {
         [updatedArray[fromIndex], updatedArray[toIndex]] = [updatedArray[toIndex], updatedArray[fromIndex]];
         setRandomArray(updatedArray);
         setHighlightedIndex(null);
+        verifyAnswer(updatedArray);
     };
 
     const handleDragOver = (index) => {
@@ -44,17 +47,59 @@ const QuicksortPartition = () => {
         setRandomArray(array);
         setOriginalArray(array);
         setAnswer('');
+        setIsCorrect(false);
+        setShowAnswerButton(true);
     };
 
     const showAnswer = () => {
-        if (originalArray.length === 0) return;
+        const array = [...originalArray];
+        const pivot = array[array.length - 1];
+        let i = 0;
+        let j = 0;
+    
+        while (i < array.length - 1) {
+            if (array[i] < pivot) {
+                [array[i], array[j]] = [array[j], array[i]];
+                j++;
+            }
+            i++;
+        }
+        [array[j], array[array.length - 1]] = [array[array.length - 1], array[j]];
+    
+        const lessThanPivot = array.slice(0, j);
+        const greaterThanOrEqualPivot = array.slice(j + 1);
+    
+        const partitionedArray = [
+            `(${lessThanPivot.join(' ')})`,
+            pivot,
+            `(${greaterThanOrEqualPivot.join(' ')})`,
+        ];
+    
+        setAnswer(partitionedArray.join(' '));
+        setShowAnswerButton(false);
+    };
 
-        const pivot = originalArray[0];
-        const lessThanPivot = originalArray.filter(num => num < pivot);
-        const greaterThanPivot = originalArray.filter(num => num > pivot);
-        const result = `(${lessThanPivot.join(' ')}) ${pivot} (${greaterThanPivot.join(' ')})`;
+    const verifyAnswer = (currentArray) => {
+        const array = [...originalArray];
+        const pivot = array[array.length - 1];
+        let i = 0;
+        let j = 0;
 
-        setAnswer(result);
+        while (i < array.length - 1) {
+            if (array[i] < pivot) {
+                [array[i], array[j]] = [array[j], array[i]];
+                j++;
+            }
+            i++;
+        }
+        [array[j], array[array.length - 1]] = [array[array.length - 1], array[j]];
+
+        const lessThanPivot = array.slice(0, j);
+        const greaterThanOrEqualPivot = array.slice(j + 1);
+
+        const correctArray = [...lessThanPivot, pivot, ...greaterThanOrEqualPivot];
+
+        setIsCorrect(JSON.stringify(currentArray) === JSON.stringify(correctArray));
     };
 
     return (
@@ -75,11 +120,12 @@ const QuicksortPartition = () => {
                 ))}
             </div>
 
-            {answer && <h3>{answer}</h3>}
+            {isCorrect && <h3 className='correct'>Correct</h3>}
+            {answer && <h3 className={isCorrect ? 'correct' : 'incorrect'}>{answer}</h3>}
 
             <div className="button-container">
                 <button className="styled-button" onClick={generateNewList}>Generate New List</button>
-                <button className="styled-button" onClick={showAnswer}>Show Answer</button>
+                {showAnswerButton && <button className="styled-button" onClick={showAnswer}>Show Answer</button>}
             </div>
         </div>
     );
