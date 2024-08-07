@@ -20,7 +20,7 @@ const QuicksortPartition = () => {
     const [isCorrect, setIsCorrect] = useState(false);
     const [showAnswerButton, setShowAnswerButton] = useState(true);
     const [pivot, setPivot] = useState(null);
-    const [boxStyleOverride, setBoxStyleOverride] = useState(''); // State for boxStyle override
+    const [boxStyleOverride, setBoxStyleOverride] = useState('box-empty');
 
     useEffect(() => {
         const array = generateRandomArray();
