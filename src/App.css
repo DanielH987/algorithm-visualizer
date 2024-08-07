@@ -246,3 +246,8 @@ p {
 .box.is-dragging {
   opacity: 0.5;
 }
+
+.box.highlight {
+  border-color: black;
+  border-width: 2px;
+}
