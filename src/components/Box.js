@@ -12,7 +12,7 @@ const Box = ({ value, index, moveBox }) => {
 
     const [, dropRef] = useDrop({
         accept: 'BOX',
-        hover: (item) => {
+        drop: (item) => {
             if (item.index !== index) {
                 moveBox(item.index, index);
                 item.index = index;
