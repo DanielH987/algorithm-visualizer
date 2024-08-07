@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Box from './Box';
 
 const generateRandomArray = () => {
@@ -21,6 +22,7 @@ const QuicksortPartition = () => {
     const [showAnswerButton, setShowAnswerButton] = useState(true);
     const [pivot, setPivot] = useState(null);
     const [boxStyleOverride, setBoxStyleOverride] = useState('box-empty');
+    const [showMessage, setShowMessage] = useState(false);
 
     useEffect(() => {
         const array = generateRandomArray();
@@ -108,6 +110,7 @@ const QuicksortPartition = () => {
 
     const toggleBoxStyle = () => {
         setBoxStyleOverride((prevStyle) => (prevStyle === '' ? 'box-empty' : ''));
+        setShowMessage((prevShowMessage) => !prevShowMessage);
     };
 
     return (
@@ -115,8 +118,22 @@ const QuicksortPartition = () => {
             <h2>Preparation for Quiz QQP</h2>
             <h3>{originalArray.join(' | ')}</h3>
             <div className="button-container">
-                <button className="styled-button" onClick={toggleBoxStyle}>Toggle Box Style</button>
+                <button className="styled-button" onClick={toggleBoxStyle}>
+                    {boxStyleOverride === 'box-empty' ? <FaEyeSlash /> : <FaEye />}
+                </button>
             </div>
+            {showMessage && 
+                <div style={{ lineHeight: '1.5' }}>
+                    <p>
+                        <span style={{ display: 'inline-block', backgroundColor: 'yellow', padding: '5px', borderRadius: '5px', marginBottom: '5px' }}>
+                            Less than the pivot
+                        </span>
+                        <span style={{ display: 'inline-block', backgroundColor: 'lightblue', padding: '5px', borderRadius: '5px' }}>
+                            Greater than the pivot
+                        </span>
+                    </p>
+                </div>
+            }
             <div className="box-container">
                 {randomArray.map((value, index) => (
                     <Box
