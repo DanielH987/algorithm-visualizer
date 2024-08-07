@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight }) => {
+const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight, pivot }) => {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'BOX',
         item: { index },
@@ -27,10 +27,12 @@ const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight }) => {
         },
     });
 
+    const boxStyle = value !== pivot ? (value < pivot ? 'box-yellow' : 'box-blue') : '';
+
     return (
         <div
             ref={(node) => dragRef(dropRef(node))}
-            className={`box ${highlight ? 'highlight' : ''} ${isDragging ? 'is-dragging' : ''}`}
+            className={`box ${highlight ? 'highlight' : ''} ${isDragging ? 'is-dragging' : ''} ${boxStyle}`}
         >
             {value}
         </div>
