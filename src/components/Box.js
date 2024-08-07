@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-const Box = ({ value, index, moveBox }) => {
+const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight }) => {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'BOX',
         item: { index },
@@ -16,14 +16,21 @@ const Box = ({ value, index, moveBox }) => {
             if (item.index !== index) {
                 moveBox(item.index, index);
                 item.index = index;
+                onDragLeave(); // Reset highlight after drop
             }
+        },
+        hover: () => {
+            onDragOver(index);
+        },
+        leave: () => {
+            onDragLeave();
         },
     });
 
     return (
         <div
             ref={(node) => dragRef(dropRef(node))}
-            className={`box ${isDragging ? 'is-dragging' : ''}`}
+            className={`box ${highlight ? 'highlight' : ''} ${isDragging ? 'is-dragging' : ''}`}
         >
             {value}
         </div>
