@@ -12,17 +12,24 @@ const TreeNode = ({ node, index, leftChild, rightChild, moveNode }) => {
     }),
   });
 
-  const [, drop] = useDrop({
+  const [{ isOver }, drop] = useDrop({
     accept: ItemType,
     drop: (item) => {
       moveNode(item.index, index);
     },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+    }),
   });
 
   return (
     <div className="tree-node-container">
       <div ref={drop}>
-        <div ref={drag} style={{ opacity: isDragging ? 0.5 : 1 }} className="tree-node">
+        <div
+          ref={drag}
+          style={{ opacity: isDragging ? 0.5 : 1 }}
+          className={`tree-node ${isOver ? 'highlight' : ''}`}
+        >
           {node.value}
         </div>
       </div>
