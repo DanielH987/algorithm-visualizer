@@ -4,7 +4,7 @@ import Box from './Box';
 const generateRandomArray = () => {
     const array = [];
     while (array.length < 15) {
-        const randomInt = Math.floor(Math.random() * 21);
+        const randomInt = Math.floor(Math.random() * 41);
         if (!array.includes(randomInt)) {
             array.push(randomInt);
         }
@@ -16,6 +16,7 @@ const QuicksortPartition = () => {
     const [randomArray, setRandomArray] = useState([]);
     const [originalArray, setOriginalArray] = useState([]);
     const [highlightedIndex, setHighlightedIndex] = useState(null);
+    const [answer, setAnswer] = useState('');
 
     useEffect(() => {
         const array = generateRandomArray();
@@ -27,7 +28,7 @@ const QuicksortPartition = () => {
         const updatedArray = [...randomArray];
         [updatedArray[fromIndex], updatedArray[toIndex]] = [updatedArray[toIndex], updatedArray[fromIndex]];
         setRandomArray(updatedArray);
-        setHighlightedIndex(null); // Reset highlight after drop
+        setHighlightedIndex(null);
     };
 
     const handleDragOver = (index) => {
@@ -36,6 +37,24 @@ const QuicksortPartition = () => {
 
     const handleDragLeave = () => {
         setHighlightedIndex(null);
+    };
+
+    const generateNewList = () => {
+        const array = generateRandomArray();
+        setRandomArray(array);
+        setOriginalArray(array);
+        setAnswer('');
+    };
+
+    const showAnswer = () => {
+        if (originalArray.length === 0) return;
+
+        const pivot = originalArray[0];
+        const lessThanPivot = originalArray.filter(num => num < pivot);
+        const greaterThanPivot = originalArray.filter(num => num > pivot);
+        const result = `(${lessThanPivot.join(' ')}) ${pivot} (${greaterThanPivot.join(' ')})`;
+
+        setAnswer(result);
     };
 
     return (
@@ -54,6 +73,13 @@ const QuicksortPartition = () => {
                         highlight={index === highlightedIndex}
                     />
                 ))}
+            </div>
+
+            {answer && <h3>{answer}</h3>}
+
+            <div className="button-container">
+                <button className="styled-button" onClick={generateNewList}>Generate New List</button>
+                <button className="styled-button" onClick={showAnswer}>Show Answer</button>
             </div>
         </div>
     );
