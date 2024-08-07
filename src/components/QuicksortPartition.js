@@ -19,11 +19,13 @@ const QuicksortPartition = () => {
     const [answer, setAnswer] = useState('');
     const [isCorrect, setIsCorrect] = useState(false);
     const [showAnswerButton, setShowAnswerButton] = useState(true);
+    const [pivot, setPivot] = useState(null);  // Add state for pivot
 
     useEffect(() => {
         const array = generateRandomArray();
         setRandomArray(array);
         setOriginalArray(array);
+        setPivot(array[array.length - 1]);  // Set the pivot
     }, []);
 
     const moveBox = (fromIndex, toIndex) => {
@@ -46,6 +48,7 @@ const QuicksortPartition = () => {
         const array = generateRandomArray();
         setRandomArray(array);
         setOriginalArray(array);
+        setPivot(array[array.length - 1]);  // Reset the pivot
         setAnswer('');
         setIsCorrect(false);
         setShowAnswerButton(true);
@@ -116,6 +119,7 @@ const QuicksortPartition = () => {
                         onDragOver={handleDragOver}
                         onDragLeave={handleDragLeave}
                         highlight={index === highlightedIndex}
+                        pivot={pivot}
                     />
                 ))}
             </div>
