@@ -15,6 +15,7 @@ const generateRandomArray = () => {
 const QuicksortPartition = () => {
     const [randomArray, setRandomArray] = useState([]);
     const [originalArray, setOriginalArray] = useState([]);
+    const [highlightedIndex, setHighlightedIndex] = useState(null);
 
     useEffect(() => {
         const array = generateRandomArray();
@@ -26,6 +27,15 @@ const QuicksortPartition = () => {
         const updatedArray = [...randomArray];
         [updatedArray[fromIndex], updatedArray[toIndex]] = [updatedArray[toIndex], updatedArray[fromIndex]];
         setRandomArray(updatedArray);
+        setHighlightedIndex(null); // Reset highlight after drop
+    };
+
+    const handleDragOver = (index) => {
+        setHighlightedIndex(index);
+    };
+
+    const handleDragLeave = () => {
+        setHighlightedIndex(null);
     };
 
     return (
@@ -34,7 +44,15 @@ const QuicksortPartition = () => {
             <h3>{originalArray.join(' | ')}</h3>
             <div className="box-container">
                 {randomArray.map((value, index) => (
-                    <Box key={index} index={index} value={value} moveBox={moveBox} />
+                    <Box
+                        key={index}
+                        index={index}
+                        value={value}
+                        moveBox={moveBox}
+                        onDragOver={handleDragOver}
+                        onDragLeave={handleDragLeave}
+                        highlight={index === highlightedIndex}
+                    />
                 ))}
             </div>
         </div>
