@@ -1,8 +1,15 @@
-body {
+html, body, #root {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  height: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+h2, h3 {
+  text-align: center;
 }
 
 header {
@@ -40,7 +47,12 @@ nav ul li a:hover {
   background-color: #575757;
 }
 
+header, nav, footer {
+  flex-shrink: 0;
+}
+
 main {
+  flex-grow: 1;
   padding: 1em;
 }
 
@@ -49,9 +61,6 @@ footer {
   color: white;
   padding: 1em;
   text-align: center;
-  position: fixed;
-  width: 100%;
-  bottom: 0;
 }
 
 /* Responsive styling */
@@ -143,14 +152,6 @@ footer {
   width: 100%;
 }
 
-/* .tree-children::before, .tree-children::after {
-  content: '';
-  position: absolute;
-  width: 50%;
-  top: -20px;
-  border-top: 1px solid #ccc;
-} */
-
 .tree-children::before {
   left: 0;
   border-right: 1px solid #ccc;
@@ -167,7 +168,7 @@ footer {
 }
 
 .styled-button {
-  background-color: #575757; /* Green */
+  background-color: #575757;
   border: none;
   color: white;
   padding: 15px 32px;
