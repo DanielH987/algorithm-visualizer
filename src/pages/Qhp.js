@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Tree from '../components/Tree';
+import Tree from '../components/Heap/Tree';
 import Modal from '../components/Modal';
 
 const Qhp = () => {

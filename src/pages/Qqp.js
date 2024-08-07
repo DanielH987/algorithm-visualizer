@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import QuicksortPartition from '../components/QuicksortPartition';
+import QuicksortPartition from '../components/Quicksort/QuicksortPartition';
 import Modal from '../components/Modal';
 
 const Qqp = () => {

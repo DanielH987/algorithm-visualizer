@@ -1,10 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import LongCommonSub from '../components/LongCommonSub/LongCommonSub';
+import Modal from '../components/Modal';
 
 const Qlcs = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div>
-      <h2>Qlcs</h2>
-      <p>Discover Qlcs.</p>
+      <LongCommonSub />
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <h2>Welcome to the QLCS Page!</h2>
+        <p>Given two strings, discover the longest common subsequence (LCS). Report both the length of the LCS and a sample common subsequence of that length.</p>
+        <p>You'll see a "Correct!" message once you've successfully completed the task.</p>
+        <p>Click "Generate New" to create a new practice quiz.</p>
+        <p>Tap anywhere to close this message.</p>
+      </Modal>
     </div>
   );
 };
