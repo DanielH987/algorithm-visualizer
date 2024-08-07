@@ -1,10 +1,22 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import Modal from '../components/Modal';
 
 const Qbst = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
   return (
     <div>
-      <h2>Qbst</h2>
-      <p>Check out Qbst.</p>
+      <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
+        <h2>Welcome to the Qbst Page!</h2>
+      </Modal>
     </div>
   );
 };
