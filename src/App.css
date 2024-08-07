@@ -146,6 +146,11 @@ footer {
   background-color: #f0f0f0;
 }
 
+.tree-node.highlight {
+  border-color: black;
+  border-width: 2px;
+}
+
 .tree-children {
   display: flex;
   justify-content: space-between;
