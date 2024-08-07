@@ -3,7 +3,7 @@ import React from 'react';
 const Header = () => {
   return (
     <header>
-      <h1>ALGORITHM VISUALIZER</h1>
+      <h1>Algorithm Visualizer</h1>
     </header>
   );
 };
