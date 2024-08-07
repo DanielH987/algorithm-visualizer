@@ -216,3 +216,33 @@ footer {
 p {
   text-align: center;
 }
+
+.box-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+.box {
+  padding: 20px;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: #fff;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.box:hover {
+  background-color: #f0f0f0;
+}
+
+.box.is-dragging {
+  opacity: 0.5;
+}
