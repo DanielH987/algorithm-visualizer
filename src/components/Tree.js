@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import update from 'immutability-helper';
 import TreeNode from './TreeNode';
 
@@ -55,9 +55,17 @@ const createTreeData = (nodes) => {
 };
 
 const Tree = () => {
-  const [nodes, setNodes] = useState(generateRandomArray().map((value, index) => ({ id: index, value })));
+  const [originalNodes, setOriginalNodes] = useState([]);
+  const [nodes, setNodes] = useState([]);
   const [showAnswer, setShowAnswer] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
+  const [correctOrder, setCorrectOrder] = useState([]);
+
+  useEffect(() => {
+    const initialNodes = generateRandomArray().map((value, index) => ({ id: index, value }));
+    setOriginalNodes(initialNodes);
+    setNodes(initialNodes);
+  }, []);
 
   const moveNode = useCallback(
     (fromIndex, toIndex) => {
@@ -71,10 +79,15 @@ const Tree = () => {
   );
 
   const handleShowAnswer = () => {
-    setShowAnswer(true);
     const heapArray = buildMaxHeap(nodes.map(node => node.value));
-    const isCorrectHeap = nodes.every((node, index) => node.value === heapArray[index]);
-    setIsCorrect(isCorrectHeap);
+    setCorrectOrder(heapArray);
+    setShowAnswer(true);
+  };
+
+  const verifyAnswer = () => {
+    const currentValues = nodes.map(node => node.value);
+    const isCorrectOrder = JSON.stringify(currentValues) === JSON.stringify(correctOrder);
+    setIsCorrect(isCorrectOrder);
   };
 
   const treeData = createTreeData(nodes);
@@ -88,14 +101,19 @@ const Tree = () => {
     ));
   };
 
+  const displayCorrectOrder = (order) => {
+    return order.map((value, index) => (
+      <span key={index}>
+        {value}
+        {index < order.length - 1 && ' | '}
+      </span>
+    ));
+  };
+
   return (
     <div>
       <h2>Preparation for Quiz QHP</h2>
-      <p>Perform the BUILD-MAX-HEAP algorithm on the following array of numbers. Then click the "Show Answer" button to check your work.</p>
-      <p>Reload the page at any time to generate a new practice quiz.</p>
-      <h3 style={{ textAlign: 'center' }}>
-        {displayNodes(nodes)}
-      </h3>
+      <h3>{displayNodes(originalNodes)}</h3>
       <div className="tree">
         {treeData && (
           <TreeNode
@@ -107,9 +125,11 @@ const Tree = () => {
           />
         )}
       </div>
-      {showAnswer && <p><strong>{isCorrect ? 'Correct!' : 'Incorrect, please try again.'}</strong></p>}
+      <h3><strong>{isCorrect ? 'Correct!' : 'Incorrect, please try again.'}</strong></h3>
+      {showAnswer && <h3>Correct Order: {displayCorrectOrder(correctOrder)}</h3>}
       <div className="button-container">
-        <button className="styled-button" onClick={handleShowAnswer}>Show Answer</button>
+        {!showAnswer && <button className="styled-button" onClick={handleShowAnswer}>Show Answer</button>}
+        <button className="styled-button" onClick={verifyAnswer}>Verify Answer</button>
       </div>
     </div>
   );
