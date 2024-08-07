@@ -256,3 +256,11 @@ p {
   border-color: black;
   border-width: 2px;
 }
+
+.box-yellow {
+  background-color: yellow;
+}
+
+.box-blue {
+  background-color: lightblue;
+}
