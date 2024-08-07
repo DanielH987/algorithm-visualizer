@@ -16,7 +16,7 @@ const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight }) => {
             if (item.index !== index) {
                 moveBox(item.index, index);
                 item.index = index;
-                onDragLeave(); // Reset highlight after drop
+                onDragLeave();
             }
         },
         hover: () => {
