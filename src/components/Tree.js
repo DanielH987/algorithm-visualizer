@@ -61,13 +61,19 @@ const Tree = () => {
   const [isCorrect, setIsCorrect] = useState(false);
   const [correctOrder, setCorrectOrder] = useState([]);
 
-  useEffect(() => {
+  const generateNewTree = useCallback(() => {
     const initialNodes = generateRandomArray().map((value, index) => ({ id: index, value }));
     setOriginalNodes(initialNodes);
     setNodes(initialNodes);
     const heapArray = buildMaxHeap(initialNodes.map(node => node.value));
     setCorrectOrder(heapArray);
+    setShowAnswer(false);
+    setIsCorrect(false);
   }, []);
+
+  useEffect(() => {
+    generateNewTree();
+  }, [generateNewTree]);
 
   const moveNode = useCallback(
     (fromIndex, toIndex) => {
@@ -135,6 +141,7 @@ const Tree = () => {
         </h3>
       }
       <div className="button-container">
+        <button className="styled-button" onClick={generateNewTree}>Generate New Tree</button>
         {!showAnswer && <button className="styled-button" onClick={handleShowAnswer}>Show Answer</button>}
       </div>
     </div>
