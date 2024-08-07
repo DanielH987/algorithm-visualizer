@@ -1,7 +1,8 @@
+// Box.js
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 
-const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight, pivot }) => {
+const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight, pivot, boxStyleOverride }) => {
     const [{ isDragging }, dragRef] = useDrag({
         type: 'BOX',
         item: { index },
@@ -27,7 +28,8 @@ const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight, pivot 
         },
     });
 
-    const boxStyle = value !== pivot ? (value < pivot ? 'box-yellow' : 'box-blue') : '';
+    const defaultBoxStyle = value !== pivot ? (value < pivot ? 'box-yellow' : 'box-blue') : '';
+    const boxStyle = boxStyleOverride || defaultBoxStyle;
 
     return (
         <div
