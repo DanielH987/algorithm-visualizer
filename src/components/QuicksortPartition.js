@@ -19,13 +19,14 @@ const QuicksortPartition = () => {
     const [answer, setAnswer] = useState('');
     const [isCorrect, setIsCorrect] = useState(false);
     const [showAnswerButton, setShowAnswerButton] = useState(true);
-    const [pivot, setPivot] = useState(null);  // Add state for pivot
+    const [pivot, setPivot] = useState(null);
+    const [boxStyleOverride, setBoxStyleOverride] = useState(''); // State for boxStyle override
 
     useEffect(() => {
         const array = generateRandomArray();
         setRandomArray(array);
         setOriginalArray(array);
-        setPivot(array[array.length - 1]);  // Set the pivot
+        setPivot(array[array.length - 1]);
     }, []);
 
     const moveBox = (fromIndex, toIndex) => {
@@ -48,7 +49,7 @@ const QuicksortPartition = () => {
         const array = generateRandomArray();
         setRandomArray(array);
         setOriginalArray(array);
-        setPivot(array[array.length - 1]);  // Reset the pivot
+        setPivot(array[array.length - 1]);
         setAnswer('');
         setIsCorrect(false);
         setShowAnswerButton(true);
@@ -59,7 +60,7 @@ const QuicksortPartition = () => {
         const pivot = array[array.length - 1];
         let i = 0;
         let j = 0;
-    
+
         while (i < array.length - 1) {
             if (array[i] < pivot) {
                 [array[i], array[j]] = [array[j], array[i]];
@@ -68,16 +69,16 @@ const QuicksortPartition = () => {
             i++;
         }
         [array[j], array[array.length - 1]] = [array[array.length - 1], array[j]];
-    
+
         const lessThanPivot = array.slice(0, j);
         const greaterThanOrEqualPivot = array.slice(j + 1);
-    
+
         const partitionedArray = [
             `(${lessThanPivot.join(' ')})`,
             pivot,
             `(${greaterThanOrEqualPivot.join(' ')})`,
         ];
-    
+
         setAnswer(partitionedArray.join(' '));
         setShowAnswerButton(false);
     };
@@ -105,10 +106,17 @@ const QuicksortPartition = () => {
         setIsCorrect(JSON.stringify(currentArray) === JSON.stringify(correctArray));
     };
 
+    const toggleBoxStyle = () => {
+        setBoxStyleOverride((prevStyle) => (prevStyle === '' ? 'box-empty' : ''));
+    };
+
     return (
         <div>
             <h2>Preparation for Quiz QQP</h2>
             <h3>{originalArray.join(' | ')}</h3>
+            <div className="button-container">
+                <button className="styled-button" onClick={toggleBoxStyle}>Toggle Box Style</button>
+            </div>
             <div className="box-container">
                 {randomArray.map((value, index) => (
                     <Box
@@ -120,6 +128,7 @@ const QuicksortPartition = () => {
                         onDragLeave={handleDragLeave}
                         highlight={index === highlightedIndex}
                         pivot={pivot}
+                        boxStyleOverride={boxStyleOverride}
                     />
                 ))}
             </div>
