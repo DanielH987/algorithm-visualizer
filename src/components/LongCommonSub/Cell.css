@@ -12,7 +12,6 @@
 }
 
 .cell input {
-  width: 100%;
   border: none;
   text-align: center;
   background-color: #fff;
@@ -33,4 +32,11 @@
 .number-input {
     -moz-appearance: textfield;
     appearance: textfield;
+}
+
+.input-dropdown-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px
 }
