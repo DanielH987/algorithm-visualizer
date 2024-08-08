@@ -53,6 +53,9 @@ const LongCommonSub = () => {
     const [userLcs, setUserLcs] = useState('');
     const [userLcsLength, setUserLcsLength] = useState('');
     const [verificationResult, setVerificationResult] = useState('');
+    const [resultColor, setResultColor] = useState('');
+    const [showAnswerColor, setShowAnswerColor] = useState('black'); // New state
+    const [showAnswerButton, setShowAnswerButton] = useState(true);
 
     const numRows = 9;
     const numCols = 9;
@@ -61,6 +64,11 @@ const LongCommonSub = () => {
         setString1(generateRandomString(7));
         setString2(generateRandomString(7));
         setVerificationResult('');
+        setShowAnswer(false);
+        setUserLcs('');
+        setUserLcsLength('');
+        setShowAnswerColor('black');
+        setShowAnswerButton(true);
     };
 
     useEffect(() => {
@@ -95,6 +103,15 @@ const LongCommonSub = () => {
         }
     }, [string1, string2, numRows, numCols]);
 
+    useEffect(() => {
+        const userLcsLengthInt = parseInt(userLcsLength, 10);
+        if (userLcs === lcs && userLcsLengthInt === lcsLength) {
+            setShowAnswerColor('green');
+        } else {
+            setShowAnswerColor('red');
+        }
+    }, [userLcs, userLcsLength, lcs, lcsLength]);
+
     const handleCellChange = (rowIndex, cellIndex, newValue) => {
         const updatedTableData = [...tableData];
         updatedTableData[rowIndex][cellIndex] = newValue;
@@ -103,6 +120,7 @@ const LongCommonSub = () => {
 
     const handleShowAnswer = () => {
         setShowAnswer(!showAnswer);
+        setShowAnswerButton(false);
     };
 
     const handleVerifyAnswer = (e) => {
@@ -110,8 +128,10 @@ const LongCommonSub = () => {
         const userLcsLengthInt = parseInt(userLcsLength, 10);
         if (userLcs === lcs && userLcsLengthInt === lcsLength) {
             setVerificationResult('Correct!');
+            setResultColor('green');
         } else {
-            setVerificationResult('Incorrect. Please try again.');
+            setVerificationResult('Incorrect!');
+            setResultColor('red');
         }
     };
 
@@ -137,14 +157,20 @@ const LongCommonSub = () => {
                 </tbody>
             </table>
             <br />
-            {showAnswer && <h3>The Longest Common Subsequence is: {lcs}</h3>}
+            {showAnswer && 
+                <h3 style={{ color: showAnswerColor }}>
+                    LCS: {lcs} | Length: {lcs.length}
+                </h3>
+            }
             <div className="styled-container">
                 <button onClick={generateNewStrings} className='styled-button'>
                     Generate New
                 </button>
-                <button onClick={handleShowAnswer} className='styled-button'>
-                    {showAnswer ? 'Hide Answer' : 'Show Answer'}
-                </button>
+                {showAnswerButton && 
+                    <button onClick={handleShowAnswer} className='styled-button'>
+                        Show Answer
+                    </button>
+                }
             </div>
             <form className="lcs-form" onSubmit={handleVerifyAnswer}>
                 <h3>Verify your answer</h3>
@@ -154,7 +180,6 @@ const LongCommonSub = () => {
                         type="text"
                         value={userLcs}
                         onChange={(e) => setUserLcs(e.target.value.toUpperCase())}
-                        placeholder='...'
                     />
                 </div>
                 <div className="form-group">
@@ -163,13 +188,12 @@ const LongCommonSub = () => {
                         type="number"
                         value={userLcsLength}
                         onChange={(e) => setUserLcsLength(e.target.value)}
-                        placeholder='...'
                         className=''
                         min='0'
                     />
                 </div>
                 <button type="submit" className='styled-button'>Submit</button>
-                {verificationResult && <p>{verificationResult}</p>}
+                {verificationResult && <h3 style={{ color: resultColor }}>{verificationResult}</h3>}
             </form>
         </div>
     );
