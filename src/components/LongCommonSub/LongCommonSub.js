@@ -58,6 +58,7 @@ const LongCommonSub = () => {
     const [showAnswerColor, setShowAnswerColor] = useState('black');
     const [showAnswerButton, setShowAnswerButton] = useState(true);
     const [boxStyleOverride, setBoxStyleOverride] = useState('toggle-box');
+    const [areCellsDisabled, setAreCellsDisabled] = useState(false);
 
     const numRows = 9;
     const numCols = 9;
@@ -139,6 +140,7 @@ const LongCommonSub = () => {
 
     const toggleBoxStyle = () => {
         setBoxStyleOverride((prevStyle) => (prevStyle === '' ? 'toggle-box' : ''));
+        setAreCellsDisabled((prevDisabled) => !prevDisabled);
     };
 
     return (
@@ -162,6 +164,7 @@ const LongCommonSub = () => {
                                     onChange={handleCellChange}
                                     rowIndex={rowIndex}
                                     cellIndex={cellIndex}
+                                    disabled={areCellsDisabled}
                                 />
                             ))}
                         </tr>
