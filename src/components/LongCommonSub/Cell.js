@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import './Cell.css';
 import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
@@ -6,6 +6,10 @@ import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
 const Cell = ({ value, onChange, rowIndex, cellIndex, disabled  }) => {
     const [inputValue, setInputValue] = useState(value || '');
     const [isIconSelected, setIsIconSelected] = useState(false);
+
+    useEffect(() => {
+        setInputValue(value || '');
+    }, [value]);
 
     const handleChange = (e) => {
         const newValue = e.target.value;
