@@ -32,6 +32,8 @@
 .number-input {
     -moz-appearance: textfield;
     appearance: textfield;
+    width: 50px;
+    transition: width 0.2s ease-in-out;
 }
 
 .input-dropdown-container {
@@ -39,4 +41,8 @@
     align-items: center;
     justify-content: center;
     gap: 5px
+}
+
+.number-input.filled {
+    width: 20px;
 }
