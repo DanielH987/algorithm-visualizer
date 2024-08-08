@@ -11,12 +11,46 @@ const generateRandomString = (length) => {
     return result;
 };
 
+const computeLCS = (string1, string2) => {
+    const m = string1.length;
+    const n = string2.length;
+    const dp = Array(m + 1).fill(null).map(() => Array(n + 1).fill(0));
+
+    for (let i = 1; i <= m; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (string1[i - 1] === string2[j - 1]) {
+                dp[i][j] = dp[i - 1][j - 1] + 1;
+            } else {
+                dp[i][j] = Math.max(dp[i - 1][j], dp[i][j - 1]);
+            }
+        }
+    }
+
+    let lcs = '';
+    let i = m, j = n;
+    while (i > 0 && j > 0) {
+        if (string1[i - 1] === string2[j - 1]) {
+            lcs = string1[i - 1] + lcs;
+            i--;
+            j--;
+        } else if (dp[i - 1][j] > dp[i][j - 1]) {
+            i--;
+        } else {
+            j--;
+        }
+    }
+
+    return lcs;
+};
+
 const LongCommonSub = () => {
     const [string1, setString1] = useState('');
     const [string2, setString2] = useState('');
+    const [tableData, setTableData] = useState([]);
+    const [showAnswer, setShowAnswer] = useState(false);
+
     const numRows = 13;
     const numCols = 13;
-    const [tableData, setTableData] = useState([]);
 
     useEffect(() => {
         setString1(generateRandomString(11));
@@ -53,6 +87,12 @@ const LongCommonSub = () => {
         setTableData(updatedTableData);
     };
 
+    const handleShowAnswer = () => {
+        setShowAnswer(!showAnswer);
+    };
+
+    const lcs = computeLCS(string1, string2);
+
     return (
         <div className="container">
             <h2>Preparation for Quiz QLCS</h2>
@@ -74,6 +114,11 @@ const LongCommonSub = () => {
                     ))}
                 </tbody>
             </table>
+            <br />
+            <button onClick={handleShowAnswer} className='styled-button'>
+                {showAnswer ? 'Hide Answer' : 'Show Answer'}
+            </button>
+            {showAnswer && <h3>The Longest Common Subsequence is: {lcs}</h3>}
         </div>
     );
 };
