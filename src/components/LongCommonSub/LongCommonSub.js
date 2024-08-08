@@ -138,7 +138,7 @@ const LongCommonSub = () => {
         }
     };
 
-    const toggleBoxStyle = () => {
+    const toggleBox = () => {
         setBoxStyleOverride((prevStyle) => (prevStyle === '' ? 'toggle-box' : ''));
         setAreCellsDisabled((prevDisabled) => !prevDisabled);
     };
@@ -148,7 +148,7 @@ const LongCommonSub = () => {
             <h2>Preparation for Quiz QLCS</h2>
             <h3>{string1} and {string2}</h3>
             <div className="button-container">
-                <button className="styled-button" onClick={toggleBoxStyle}>
+                <button className="styled-button" onClick={toggleBox}>
                     {boxStyleOverride === 'toggle-box' ? <FaEyeSlash /> : <FaEye />}
                 </button>
             </div>
