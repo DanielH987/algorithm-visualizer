@@ -48,6 +48,11 @@ const LongCommonSub = () => {
     const [string2, setString2] = useState('');
     const [tableData, setTableData] = useState([]);
     const [showAnswer, setShowAnswer] = useState(false);
+    const [lcs, setLcs] = useState('');
+    const [lcsLength, setLcsLength] = useState(0);
+    const [userLcs, setUserLcs] = useState('');
+    const [userLcsLength, setUserLcsLength] = useState('');
+    const [verificationResult, setVerificationResult] = useState('');
 
     const numRows = 9;
     const numCols = 9;
@@ -55,6 +60,7 @@ const LongCommonSub = () => {
     const generateNewStrings = () => {
         setString1(generateRandomString(7));
         setString2(generateRandomString(7));
+        setVerificationResult('');
     };
 
     useEffect(() => {
@@ -82,6 +88,10 @@ const LongCommonSub = () => {
                 rows.push(cells);
             }
             setTableData(rows);
+
+            const computedLcs = computeLCS(string1, string2);
+            setLcs(computedLcs);
+            setLcsLength(computedLcs.length);
         }
     }, [string1, string2, numRows, numCols]);
 
@@ -95,7 +105,15 @@ const LongCommonSub = () => {
         setShowAnswer(!showAnswer);
     };
 
-    const lcs = computeLCS(string1, string2);
+    const handleVerifyAnswer = (e) => {
+        e.preventDefault();
+        const userLcsLengthInt = parseInt(userLcsLength, 10);
+        if (userLcs === lcs && userLcsLengthInt === lcsLength) {
+            setVerificationResult('Correct!');
+        } else {
+            setVerificationResult('Incorrect. Please try again.');
+        }
+    };
 
     return (
         <div className="container">
@@ -119,8 +137,8 @@ const LongCommonSub = () => {
                 </tbody>
             </table>
             <br />
+            {showAnswer && <h3>The Longest Common Subsequence is: {lcs}</h3>}
             <div className="styled-container">
-                {showAnswer && <h3>The Longest Common Subsequence is: {lcs}</h3>}
                 <button onClick={generateNewStrings} className='styled-button'>
                     Generate New
                 </button>
@@ -128,6 +146,31 @@ const LongCommonSub = () => {
                     {showAnswer ? 'Hide Answer' : 'Show Answer'}
                 </button>
             </div>
+            <form className="lcs-form" onSubmit={handleVerifyAnswer}>
+                <h3>Verify your answer</h3>
+                <div className="form-group">
+                    <label>LCS:</label>
+                    <input
+                        type="text"
+                        value={userLcs}
+                        onChange={(e) => setUserLcs(e.target.value.toUpperCase())}
+                        placeholder='...'
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Length:</label>
+                    <input
+                        type="number"
+                        value={userLcsLength}
+                        onChange={(e) => setUserLcsLength(e.target.value)}
+                        placeholder='...'
+                        className=''
+                        min='0'
+                    />
+                </div>
+                <button type="submit" className='styled-button'>Submit</button>
+                {verificationResult && <p>{verificationResult}</p>}
+            </form>
         </div>
     );
 };
