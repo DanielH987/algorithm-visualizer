@@ -49,12 +49,16 @@ const LongCommonSub = () => {
     const [tableData, setTableData] = useState([]);
     const [showAnswer, setShowAnswer] = useState(false);
 
-    const numRows = 13;
-    const numCols = 13;
+    const numRows = 9;
+    const numCols = 9;
+
+    const generateNewStrings = () => {
+        setString1(generateRandomString(7));
+        setString2(generateRandomString(7));
+    };
 
     useEffect(() => {
-        setString1(generateRandomString(11));
-        setString2(generateRandomString(11));
+        generateNewStrings();
     }, []);
 
     useEffect(() => {
@@ -115,10 +119,15 @@ const LongCommonSub = () => {
                 </tbody>
             </table>
             <br />
-            <button onClick={handleShowAnswer} className='styled-button'>
-                {showAnswer ? 'Hide Answer' : 'Show Answer'}
-            </button>
-            {showAnswer && <h3>The Longest Common Subsequence is: {lcs}</h3>}
+            <div className="styled-container">
+                {showAnswer && <h3>The Longest Common Subsequence is: {lcs}</h3>}
+                <button onClick={generateNewStrings} className='styled-button'>
+                    Generate New
+                </button>
+                <button onClick={handleShowAnswer} className='styled-button'>
+                    {showAnswer ? 'Hide Answer' : 'Show Answer'}
+                </button>
+            </div>
         </div>
     );
 };
