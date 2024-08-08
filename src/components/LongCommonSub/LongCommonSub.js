@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LongCommonSub.css';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import Cell from './Cell';
 
 const generateRandomString = (length) => {
@@ -54,8 +55,9 @@ const LongCommonSub = () => {
     const [userLcsLength, setUserLcsLength] = useState('');
     const [verificationResult, setVerificationResult] = useState('');
     const [resultColor, setResultColor] = useState('');
-    const [showAnswerColor, setShowAnswerColor] = useState('black'); // New state
+    const [showAnswerColor, setShowAnswerColor] = useState('black');
     const [showAnswerButton, setShowAnswerButton] = useState(true);
+    const [boxStyleOverride, setBoxStyleOverride] = useState('toggle-box');
 
     const numRows = 9;
     const numCols = 9;
@@ -135,10 +137,20 @@ const LongCommonSub = () => {
         }
     };
 
+    const toggleBoxStyle = () => {
+        setBoxStyleOverride((prevStyle) => (prevStyle === '' ? 'toggle-box' : ''));
+    };
+
     return (
         <div className="container">
             <h2>Preparation for Quiz QLCS</h2>
             <h3>{string1} and {string2}</h3>
+            <div className="button-container">
+                <button className="styled-button" onClick={toggleBoxStyle}>
+                    {boxStyleOverride === 'toggle-box' ? <FaEyeSlash /> : <FaEye />}
+                </button>
+            </div>
+            <br />
             <table>
                 <tbody>
                     {tableData.map((row, rowIndex) => (
