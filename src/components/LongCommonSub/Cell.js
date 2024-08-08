@@ -3,7 +3,7 @@ import Select from 'react-select';
 import './Cell.css';
 import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
 
-const Cell = ({ value, onChange, rowIndex, cellIndex }) => {
+const Cell = ({ value, onChange, rowIndex, cellIndex, disabled  }) => {
     const [inputValue, setInputValue] = useState(value || '');
     const [isIconSelected, setIsIconSelected] = useState(false);
 
@@ -81,6 +81,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex }) => {
                             isClearable={false}
                             isSearchable={false}
                             placeholder=""
+                            isDisabled={disabled}
                         />
                     )}
                     <input
@@ -88,6 +89,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex }) => {
                         value={inputValue}
                         onChange={handleChange}
                         className={`number-input ${inputValue ? 'filled' : ''}`}
+                        disabled={disabled}
                     />
                 </div>
             ) : (
