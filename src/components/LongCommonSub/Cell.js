@@ -14,7 +14,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex }) => {
     };
 
     const handleSelectChange = (selectedOption) => {
-        setIsIconSelected(!!selectedOption); // Check if an icon is selected
+        setIsIconSelected(!!selectedOption);
         console.log(`Selected: ${selectedOption?.value}`);
     };
 
@@ -31,8 +31,10 @@ const Cell = ({ value, onChange, rowIndex, cellIndex }) => {
             borderColor: 'transparent',
             minHeight: '30px',
             height: '50px',
-            width: '225px',
+            width: '25px',
             boxShadow: 'none',
+            display: 'flex',
+            alignItems: 'center',
         }),
         indicatorsContainer: (provided) => ({
             ...provided,
@@ -41,10 +43,28 @@ const Cell = ({ value, onChange, rowIndex, cellIndex }) => {
         dropdownIndicator: (provided) => ({
             ...provided,
             display: isIconSelected ? 'none' : 'flex',
+            padding: '0',
         }),
         indicatorSeparator: (provided) => ({
             ...provided,
             display: 'none',
+        }),
+        valueContainer: (provided) => ({
+            ...provided,
+            padding: '0',
+        }),
+        singleValue: (provided) => ({
+            ...provided,
+            display: 'flex',
+            alignItems: 'center',
+        }),
+        menu: (provided) => ({
+            ...provided,
+            width: '50px',
+        }),
+        menuList: (provided) => ({
+            ...provided,
+            width: '50px',
         }),
     };
 
@@ -67,7 +87,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex }) => {
                         type="number"
                         value={inputValue}
                         onChange={handleChange}
-                        className="number-input"
+                        className={`number-input ${inputValue ? 'filled' : ''}`}
                     />
                 </div>
             ) : (
