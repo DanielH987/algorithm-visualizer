@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import './LongCommonSub.css';
 import Cell from './Cell';
 
-
 const generateRandomString = (length) => {
     let result = '';
     const characters = 'AB';
@@ -38,9 +37,8 @@ const LongCommonSub = () => {
                         cells.push(string2[i - 2]);
                     } else if (i > 0 && j === 1) {
                         cells.push(0);
-                    }
-                    else {
-                        cells.push(null);
+                    } else {
+                        cells.push('');
                     }
                 }
                 rows.push(cells);
@@ -48,6 +46,12 @@ const LongCommonSub = () => {
             setTableData(rows);
         }
     }, [string1, string2, numRows, numCols]);
+
+    const handleCellChange = (rowIndex, cellIndex, newValue) => {
+        const updatedTableData = [...tableData];
+        updatedTableData[rowIndex][cellIndex] = newValue;
+        setTableData(updatedTableData);
+    };
 
     return (
         <div className="container">
@@ -58,7 +62,13 @@ const LongCommonSub = () => {
                     {tableData.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             {row.map((cellValue, cellIndex) => (
-                                <Cell key={cellIndex} value={cellValue} />
+                                <Cell
+                                    key={cellIndex}
+                                    value={cellValue}
+                                    onChange={handleCellChange}
+                                    rowIndex={rowIndex}
+                                    cellIndex={cellIndex}
+                                />
                             ))}
                         </tr>
                     ))}
