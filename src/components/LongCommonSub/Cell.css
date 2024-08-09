@@ -11,6 +11,24 @@
   transition: background-color 0.3s;
 }
 
+.cell.disabled {
+  padding: 20px;
+  border: 1px solid #ccc;
+  text-align: center;
+  /* background-color: #f6f6f6; */
+  width: 50px;
+  height: 50px;
+  align-items: center;
+  justify-content: center;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+.cell.disabled.correct {
+  background-color: green;
+}
+
 .cell input {
   border: none;
   text-align: center;
@@ -21,6 +39,11 @@
   justify-content: center;
   cursor: pointer;
   transition: background-color 0.3s;
+}
+
+.cell.disabled input {
+  /* background-color: #f6f6f6; */
+  cursor: not-allowed;
 }
 
 .number-input::-webkit-outer-spin-button,
