@@ -4,11 +4,9 @@ import React from 'react';
 const Modal = ({ isOpen, onClose, children }) => {
     if (!isOpen) return null;
   
-    const handleOverlayClick = (e) => {
-      if (e.target === e.currentTarget) {
-        onClose();
-      }
-    };
+    const handleOverlayClick = () => {
+      onClose();
+  };
   
     return (
       <div className="modal-overlay" onClick={handleOverlayClick}>
