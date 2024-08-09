@@ -126,6 +126,8 @@ const LongCommonSub = () => {
                 }
             }
 
+            console.log(CorrectRows);
+
             setTableData(rows);
             setCorrectTableData(CorrectRows);
 
