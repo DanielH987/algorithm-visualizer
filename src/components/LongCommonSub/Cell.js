@@ -103,7 +103,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue }) =
                         type="number"
                         value={inputValue}
                         onChange={handleChange}
-                        className={`number-input ${inputValue ? 'filled' : ''}`}
+                        className={`number-input ${inputValue !== '' ? 'filled' : ''}`}
                         disabled={disabled}
                     />
                 </div>
