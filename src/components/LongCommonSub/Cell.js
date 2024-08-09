@@ -9,7 +9,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue }) =
     const [isIconSelected, setIsIconSelected] = useState(false);
 
     useEffect(() => {
-        setInputValue(value || '');
+        setInputValue(value);
     }, [value]);
 
     useEffect(() => {
@@ -83,7 +83,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue }) =
     };
 
     return (
-        <td className="cell">
+        <td className={!disabled ? "cell" : "cell disabled"}>
             {rowIndex > 1 && cellIndex > 1 ? (
                 <div className="input-dropdown-container">
                     {inputValue !== '' && (
