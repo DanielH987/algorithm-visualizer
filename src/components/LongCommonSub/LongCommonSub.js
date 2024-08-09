@@ -45,6 +45,9 @@ const computeLCS = (string1, string2) => {
 };
 
 const LongCommonSub = () => {
+    const numRows = 9;
+    const numCols = 9;
+
     const [string1, setString1] = useState('');
     const [string2, setString2] = useState('');
     const [tableData, setTableData] = useState([]);
@@ -60,10 +63,9 @@ const LongCommonSub = () => {
     const [showAnswerButton, setShowAnswerButton] = useState(true);
     const [boxStyleOverride, setBoxStyleOverride] = useState('toggle-box');
     const [areCellsDisabled, setAreCellsDisabled] = useState(false);
-    const [selectValue, setSelectValue] = useState(null);
-
-    const numRows = 9;
-    const numCols = 9;
+    const [selectValues, setSelectValues] = useState(
+        Array.from({ length: numRows }, () => Array(numCols).fill(null))
+    );
 
     const generateNewStrings = () => {
         setString1(generateRandomString(7));
@@ -76,6 +78,7 @@ const LongCommonSub = () => {
         setShowAnswerButton(true);
         setTableData([]);
         setCorrectTableData([]);
+        setSelectValues(Array.from({ length: numRows }, () => Array(numCols).fill(null)));
     };
 
     useEffect(() => {
@@ -86,6 +89,8 @@ const LongCommonSub = () => {
         if (string1 && string2) {
             const rows = [];
             const CorrectRows = [];
+            const newSelectValues = Array.from({ length: numRows }, () => Array(numCols).fill(null)); // Create a new array for selectValues
+    
             for (let i = 0; i < numRows; i++) {
                 const cells = [];
                 const correctCells = [];
@@ -111,31 +116,43 @@ const LongCommonSub = () => {
                 rows.push(cells);
                 CorrectRows.push(correctCells);
             }
-
+    
             for (let row = 0; row < CorrectRows.length; row++) {
                 for (let column = 0; column < CorrectRows[row].length; column++) {
                     if (row > 1 && column > 1) {
                         if (CorrectRows[0][column] === CorrectRows[row][0]) {
                             const num = CorrectRows[row - 1][column - 1] + 1;
                             CorrectRows[row][column] = num;
+                            newSelectValues[row][column] = 'upleft';
                         } else {
-                            const num = Math.max(CorrectRows[row - 1][column], CorrectRows[row][column - 1]);
+                            const num1 = CorrectRows[row - 1][column];
+                            const num2 = CorrectRows[row][column - 1];
+                            const num = Math.max(num1, num2);
+                            
                             CorrectRows[row][column] = num;
+                            
+                            if (num1 > num2) {
+                                newSelectValues[row][column] = 'up';
+                            } else if (num2 > num1) {
+                                newSelectValues[row][column] = 'left';
+                            } else {
+                                newSelectValues[row][column] = 'up';
+                            }
                         }
-                    } 
+                    }
                 }
             }
-
-            console.log(CorrectRows);
-
+    
+            console.log("New Select Values:", newSelectValues);
+            setSelectValues(newSelectValues); // Update the selectValues state with the new array
             setTableData(rows);
             setCorrectTableData(CorrectRows);
-
+    
             const computedLcs = computeLCS(string1, string2);
             setLcs(computedLcs);
             setLcsLength(computedLcs.length);
         }
-    }, [string1, string2, numRows, numCols]);
+    }, [string1, string2, numRows, numCols]);    
 
     useEffect(() => {
         const userLcsLengthInt = parseInt(userLcsLength, 10);
@@ -196,8 +213,8 @@ const LongCommonSub = () => {
                                     rowIndex={rowIndex}
                                     cellIndex={cellIndex}
                                     disabled={areCellsDisabled}
+                                    selectValue={selectValues[rowIndex][cellIndex]}
                                 />
-                                
                             ))}
                         </tr>
                         )) 
@@ -212,7 +229,6 @@ const LongCommonSub = () => {
                                     rowIndex={rowIndex}
                                     cellIndex={cellIndex}
                                     disabled={areCellsDisabled}
-                                    selectValue={selectValue}
                                 />
                             ))}
                         </tr>
