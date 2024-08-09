@@ -80,6 +80,7 @@ const LongCommonSub = () => {
         setTableData([]);
         setCorrectTableData([]);
         setSelectValues(Array.from({ length: numRows }, () => Array(numCols).fill(null)));
+        setHighlightedCells([]); 
     };
 
     useEffect(() => {
@@ -151,7 +152,11 @@ const LongCommonSub = () => {
             setLcs(computedLcs);
             setLcsLength(computedLcs.length);
         }
-    }, [string1, string2, numRows, numCols]);
+    }, [string1, string2, numRows, numCols]);    
+
+    useEffect(() => {
+        computeBackTrack();
+    }, [selectValues, correctTableData]);
 
     useEffect(() => {
         const userLcsLengthInt = parseInt(userLcsLength, 10);
@@ -189,10 +194,12 @@ const LongCommonSub = () => {
         const highlightPath = [];
         let i = numRows - 1;
         let j = numCols - 1;
-
+    
+        if (numRows <= 2 || numCols <= 2) return;
+    
         while (i > 1 && j > 1) {
             highlightPath.push([i, j]);
-
+    
             if (selectValues[i][j] === 'upleft') {
                 i--;
                 j--;
@@ -200,16 +207,17 @@ const LongCommonSub = () => {
                 i--;
             } else if (selectValues[i][j] === 'left') {
                 j--;
+            } else {
+                break;
             }
         }
-
+    
         setHighlightedCells(highlightPath);
-    };
+    };    
 
     const toggleBox = () => {
         setBoxStyleOverride((prevStyle) => (prevStyle === '' ? 'toggle-box' : ''));
         setAreCellsDisabled((prevDisabled) => !prevDisabled);
-        computeBackTrack();
     };
 
     return (
