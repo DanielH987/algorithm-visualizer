@@ -63,6 +63,7 @@ const LongCommonSub = () => {
     const [showAnswerButton, setShowAnswerButton] = useState(true);
     const [boxStyleOverride, setBoxStyleOverride] = useState('toggle-box');
     const [areCellsDisabled, setAreCellsDisabled] = useState(false);
+    const [highlightedCells, setHighlightedCells] = useState([]);
     const [selectValues, setSelectValues] = useState(
         Array.from({ length: numRows }, () => Array(numCols).fill(null))
     );
@@ -89,7 +90,7 @@ const LongCommonSub = () => {
         if (string1 && string2) {
             const rows = [];
             const CorrectRows = [];
-            const newSelectValues = Array.from({ length: numRows }, () => Array(numCols).fill(null)); // Create a new array for selectValues
+            const newSelectValues = Array.from({ length: numRows }, () => Array(numCols).fill(null));
     
             for (let i = 0; i < numRows; i++) {
                 const cells = [];
@@ -107,8 +108,7 @@ const LongCommonSub = () => {
                     } else if (i > 0 && j === 1) {
                         cells.push(0);
                         correctCells.push(0);
-                    } 
-                    else {
+                    } else {
                         cells.push('');
                         correctCells.push('');
                     }
@@ -128,9 +128,9 @@ const LongCommonSub = () => {
                             const num1 = CorrectRows[row - 1][column];
                             const num2 = CorrectRows[row][column - 1];
                             const num = Math.max(num1, num2);
-                            
+    
                             CorrectRows[row][column] = num;
-                            
+    
                             if (num1 > num2) {
                                 newSelectValues[row][column] = 'up';
                             } else if (num2 > num1) {
@@ -143,8 +143,7 @@ const LongCommonSub = () => {
                 }
             }
     
-            console.log("New Select Values:", newSelectValues);
-            setSelectValues(newSelectValues); // Update the selectValues state with the new array
+            setSelectValues(newSelectValues);
             setTableData(rows);
             setCorrectTableData(CorrectRows);
     
@@ -152,7 +151,7 @@ const LongCommonSub = () => {
             setLcs(computedLcs);
             setLcsLength(computedLcs.length);
         }
-    }, [string1, string2, numRows, numCols]);    
+    }, [string1, string2, numRows, numCols]);
 
     useEffect(() => {
         const userLcsLengthInt = parseInt(userLcsLength, 10);
@@ -186,9 +185,31 @@ const LongCommonSub = () => {
         }
     };
 
+    const computeBackTrack = () => {
+        const highlightPath = [];
+        let i = numRows - 1;
+        let j = numCols - 1;
+
+        while (i > 1 && j > 1) {
+            highlightPath.push([i, j]);
+
+            if (selectValues[i][j] === 'upleft') {
+                i--;
+                j--;
+            } else if (selectValues[i][j] === 'up') {
+                i--;
+            } else if (selectValues[i][j] === 'left') {
+                j--;
+            }
+        }
+
+        setHighlightedCells(highlightPath);
+    };
+
     const toggleBox = () => {
         setBoxStyleOverride((prevStyle) => (prevStyle === '' ? 'toggle-box' : ''));
         setAreCellsDisabled((prevDisabled) => !prevDisabled);
+        computeBackTrack();
     };
 
     return (
@@ -214,6 +235,7 @@ const LongCommonSub = () => {
                                     cellIndex={cellIndex}
                                     disabled={areCellsDisabled}
                                     selectValue={selectValues[rowIndex][cellIndex]}
+                                    highlight={highlightedCells.some(([hRow, hCol]) => hRow === rowIndex && hCol === cellIndex)}
                                 />
                             ))}
                         </tr>
