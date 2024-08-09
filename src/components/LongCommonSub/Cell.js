@@ -3,7 +3,15 @@ import Select from 'react-select';
 import './Cell.css';
 import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
 
-const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue, highlight }) => {
+const Cell = ({ 
+    value, 
+    onChange, 
+    rowIndex, 
+    cellIndex, 
+    disabled, 
+    selectValue, 
+    highlight,
+}) => {
     const [inputValue, setInputValue] = useState(value || '');
     const [selectedOption, setSelectedOption] = useState(null);
     const [isIconSelected, setIsIconSelected] = useState(false);
