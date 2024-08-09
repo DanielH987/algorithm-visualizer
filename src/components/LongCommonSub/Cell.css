@@ -25,8 +25,8 @@
   box-shadow: none;
 }
 
-.cell.disabled.correct {
-  background-color: green;
+.cell.highlight {
+  background-color: lightgreen;
 }
 
 .cell input {
