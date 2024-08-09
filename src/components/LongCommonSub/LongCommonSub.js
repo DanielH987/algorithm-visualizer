@@ -48,6 +48,7 @@ const LongCommonSub = () => {
     const [string1, setString1] = useState('');
     const [string2, setString2] = useState('');
     const [tableData, setTableData] = useState([]);
+    const [correctTableData, setCorrectTableData] = useState([]);
     const [showAnswer, setShowAnswer] = useState(false);
     const [lcs, setLcs] = useState('');
     const [lcsLength, setLcsLength] = useState(0);
@@ -59,6 +60,7 @@ const LongCommonSub = () => {
     const [showAnswerButton, setShowAnswerButton] = useState(true);
     const [boxStyleOverride, setBoxStyleOverride] = useState('toggle-box');
     const [areCellsDisabled, setAreCellsDisabled] = useState(false);
+    const [selectValue, setSelectValue] = useState(null);
 
     const numRows = 9;
     const numCols = 9;
@@ -72,6 +74,8 @@ const LongCommonSub = () => {
         setUserLcsLength('');
         setShowAnswerColor('black');
         setShowAnswerButton(true);
+        setTableData([]);
+        setCorrectTableData([]);
     };
 
     useEffect(() => {
@@ -81,24 +85,49 @@ const LongCommonSub = () => {
     useEffect(() => {
         if (string1 && string2) {
             const rows = [];
+            const CorrectRows = [];
             for (let i = 0; i < numRows; i++) {
                 const cells = [];
+                const correctCells = [];
                 for (let j = 0; j < numCols; j++) {
                     if (i === 0 && j > 1) {
                         cells.push(string1[j - 2]);
+                        correctCells.push(string1[j - 2]);
                     } else if (i === 1 && j > 0) {
                         cells.push(0);
+                        correctCells.push(0);
                     } else if (i > 1 && j === 0) {
                         cells.push(string2[i - 2]);
+                        correctCells.push(string2[i - 2]);
                     } else if (i > 0 && j === 1) {
                         cells.push(0);
-                    } else {
+                        correctCells.push(0);
+                    } 
+                    else {
                         cells.push('');
+                        correctCells.push('');
                     }
                 }
                 rows.push(cells);
+                CorrectRows.push(correctCells);
             }
+
+            for (let row = 0; row < CorrectRows.length; row++) {
+                for (let column = 0; column < CorrectRows[row].length; column++) {
+                    if (row > 1 && column > 1) {
+                        if (CorrectRows[0][column] === CorrectRows[row][0]) {
+                            const num = CorrectRows[row - 1][column - 1] + 1;
+                            CorrectRows[row][column] = num;
+                        } else {
+                            const num = Math.max(CorrectRows[row - 1][column], CorrectRows[row][column - 1]);
+                            CorrectRows[row][column] = num;
+                        }
+                    } 
+                }
+            }
+
             setTableData(rows);
+            setCorrectTableData(CorrectRows);
 
             const computedLcs = computeLCS(string1, string2);
             setLcs(computedLcs);
@@ -155,7 +184,7 @@ const LongCommonSub = () => {
             <br />
             <table>
                 <tbody>
-                    {tableData.map((row, rowIndex) => (
+                    {areCellsDisabled ? correctTableData.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             {row.map((cellValue, cellIndex) => (
                                 <Cell
@@ -166,9 +195,27 @@ const LongCommonSub = () => {
                                     cellIndex={cellIndex}
                                     disabled={areCellsDisabled}
                                 />
+                                
                             ))}
                         </tr>
-                    ))}
+                        )) 
+                        : 
+                        tableData.map((row, rowIndex) => (
+                        <tr key={rowIndex}>
+                            {row.map((cellValue, cellIndex) => (
+                                <Cell
+                                    key={cellIndex}
+                                    value={cellValue}
+                                    onChange={handleCellChange}
+                                    rowIndex={rowIndex}
+                                    cellIndex={cellIndex}
+                                    disabled={areCellsDisabled}
+                                    selectValue={selectValue}
+                                />
+                            ))}
+                        </tr>
+                        ))
+                    }
                 </tbody>
             </table>
             <br />
