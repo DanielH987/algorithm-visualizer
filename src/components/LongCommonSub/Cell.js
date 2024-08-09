@@ -3,13 +3,22 @@ import Select from 'react-select';
 import './Cell.css';
 import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
 
-const Cell = ({ value, onChange, rowIndex, cellIndex, disabled  }) => {
+const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue }) => {
     const [inputValue, setInputValue] = useState(value || '');
+    const [selectedOption, setSelectedOption] = useState(null);
     const [isIconSelected, setIsIconSelected] = useState(false);
 
     useEffect(() => {
         setInputValue(value || '');
     }, [value]);
+
+    useEffect(() => {
+        if (selectValue) {
+            const option = dropdownOptions.find(opt => opt.value === selectValue);
+            setSelectedOption(option);
+            setIsIconSelected(!!option);
+        }
+    }, [selectValue]);
 
     const handleChange = (e) => {
         const newValue = e.target.value;
@@ -18,6 +27,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex, disabled  }) => {
     };
 
     const handleSelectChange = (selectedOption) => {
+        setSelectedOption(selectedOption);
         setIsIconSelected(!!selectedOption);
         console.log(`Selected: ${selectedOption?.value}`);
     };
@@ -76,7 +86,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex, disabled  }) => {
         <td className="cell">
             {rowIndex > 1 && cellIndex > 1 ? (
                 <div className="input-dropdown-container">
-                    {inputValue && (
+                    {inputValue !== '' && (
                         <Select
                             options={dropdownOptions}
                             onChange={handleSelectChange}
@@ -86,6 +96,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex, disabled  }) => {
                             isSearchable={false}
                             placeholder=""
                             isDisabled={disabled}
+                            value={selectedOption}
                         />
                     )}
                     <input
