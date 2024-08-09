@@ -3,7 +3,7 @@ import Select from 'react-select';
 import './Cell.css';
 import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
 
-const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue }) => {
+const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue, highlight }) => {
     const [inputValue, setInputValue] = useState(value || '');
     const [selectedOption, setSelectedOption] = useState(null);
     const [isIconSelected, setIsIconSelected] = useState(false);
@@ -83,7 +83,7 @@ const Cell = ({ value, onChange, rowIndex, cellIndex, disabled, selectValue }) =
     };
 
     return (
-        <td className={!disabled ? "cell" : "cell disabled"}>
+        <td className={`cell ${highlight ? 'highlight' : ''} ${disabled ? 'disabled' : ''}`}>
             {rowIndex > 1 && cellIndex > 1 ? (
                 <div className="input-dropdown-container">
                     {inputValue !== '' && (
