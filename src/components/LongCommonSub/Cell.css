@@ -27,6 +27,8 @@
 
 .cell.highlight {
   background-color: lightgreen;
+  border-color: green;
+  border-width: 2px;
 }
 
 .cell input {
