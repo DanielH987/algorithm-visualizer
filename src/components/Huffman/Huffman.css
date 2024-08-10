@@ -1,0 +1,42 @@
+.huffman-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    gap: 20px;
+}
+
+.huffman-table {
+    border-collapse: collapse;
+}
+
+.huffman-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+    width: 100px;
+    height: 50px;
+    position: relative;
+}
+
+.huffman-table input[type="text"] {
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: none;
+    text-align: center;
+    outline: none;
+    font-size: inherit;
+    color: inherit;
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+}
+
+.huffman-table input[type="text"]:focus {
+    border: 2px solid #000;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 5px;
+    box-sizing: border-box;
+}
