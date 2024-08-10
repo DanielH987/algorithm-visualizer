@@ -1,7 +1,7 @@
+import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
 import React, { useState, useEffect } from 'react';
 import Select from 'react-select';
 import './Cell.css';
-import { GoArrowUpLeft, GoArrowUp, GoArrowLeft } from 'react-icons/go';
 
 const Cell = ({ 
     value, 
@@ -37,7 +37,6 @@ const Cell = ({
     const handleSelectChange = (selectedOption) => {
         setSelectedOption(selectedOption);
         setIsIconSelected(!!selectedOption);
-        console.log(`Selected: ${selectedOption?.value}`);
     };
 
     const dropdownOptions = [
