@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import './LongCommonSub.css';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import React, { useState, useEffect } from 'react';
 import Cell from './Cell';
+import './LongCommonSub.css';
 
 const generateRandomString = (length) => {
     let result = '';
@@ -259,6 +259,7 @@ const LongCommonSub = () => {
                                     rowIndex={rowIndex}
                                     cellIndex={cellIndex}
                                     disabled={areCellsDisabled}
+                                    selectValue={null}
                                 />
                             ))}
                         </tr>
