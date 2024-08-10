@@ -44,7 +44,6 @@
 }
 
 .cell.disabled input {
-  /* background-color: #f6f6f6; */
   cursor: not-allowed;
 }
 
@@ -69,5 +68,9 @@
 }
 
 .number-input.filled {
-    width: 20px;
+  width: 20px;
+}
+
+.number-input.filled.highlight {
+  background-color: lightgreen;
 }
