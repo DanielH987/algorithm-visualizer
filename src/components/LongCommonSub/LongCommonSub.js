@@ -1,6 +1,7 @@
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import React, { useState, useEffect } from 'react';
 import Cell from './Cell';
+import CustomSelect from './CustomSelect';
 import './LongCommonSub.css';
 
 const generateRandomString = (length) => {
@@ -235,7 +236,7 @@ const LongCommonSub = () => {
                     {areCellsDisabled ? correctTableData.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             {row.map((cellValue, cellIndex) => (
-                                <Cell
+                                <Cell 
                                     key={cellIndex}
                                     value={cellValue}
                                     onChange={handleCellChange}
@@ -244,7 +245,12 @@ const LongCommonSub = () => {
                                     disabled={areCellsDisabled}
                                     selectValue={selectValues[rowIndex][cellIndex]}
                                     highlight={highlightedCells.some(([hRow, hCol]) => hRow === rowIndex && hCol === cellIndex)}
-                                />
+                                >
+                                    <CustomSelect 
+                                        selectValue={selectValues[rowIndex][cellIndex]}
+                                        disabled={areCellsDisabled} 
+                                    />
+                                </Cell>
                             ))}
                         </tr>
                         )) 
@@ -252,15 +258,17 @@ const LongCommonSub = () => {
                         tableData.map((row, rowIndex) => (
                         <tr key={rowIndex}>
                             {row.map((cellValue, cellIndex) => (
-                                <Cell
+                                <Cell 
                                     key={cellIndex}
                                     value={cellValue}
                                     onChange={handleCellChange}
                                     rowIndex={rowIndex}
                                     cellIndex={cellIndex}
                                     disabled={areCellsDisabled}
-                                    selectValue={null}
-                                />
+                                >
+                                    <CustomSelect 
+                                    />
+                                </Cell>
                             ))}
                         </tr>
                         ))
