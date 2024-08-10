@@ -31,7 +31,7 @@ const Cell = ({
                         type="number"
                         value={inputValue}
                         onChange={handleChange}
-                        className={`number-input ${inputValue !== '' ? 'filled' : ''}`}
+                        className={`number-input ${inputValue !== '' ? 'filled' : ''} ${highlight ? 'highlight' : ''}`}
                         disabled={disabled}
                     />
                 </div>
