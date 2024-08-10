@@ -137,7 +137,7 @@ const Huffman = () => {
                 </tbody>
             </table>
 
-            <div className='styled-container'>
+            <div>
                 <button className='styled-button' onClick={regenerate}>Generate New</button>
                 <button className='styled-button' onClick={toggleShowAnswer}>
                     {showAnswer ? 'Hide Answer' : 'Show Answer'}
