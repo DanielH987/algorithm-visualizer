@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Huffman.css';
 
 const Huffman = ({
@@ -10,9 +10,59 @@ const Huffman = ({
     onEncodingChange,
     onBitLengthChange,
     onTotalBitLengthChange,
-    children
+    showAnswer
 }) => {
     const staticWords = ['Character', 'Frequency', 'Encoding', 'Bit Length', 'Total Bit Length'];
+    const [computedTotalBitLength, setComputedTotalBitLength] = useState('');
+
+    useEffect(() => {
+        const totalLength = computeHuffmanTotalBitLength(randomCharacters, randomNumbers);
+        setComputedTotalBitLength(totalLength);
+    }, [randomCharacters, randomNumbers]);
+
+    const computeHuffmanTotalBitLength = (characters, frequencies) => {
+        const heap = [];
+        for (let i = 0; i < characters.length; i++) {
+            heap.push({ char: characters[i], freq: frequencies[i], left: null, right: null });
+        }
+        heap.sort((a, b) => a.freq - b.freq);
+
+        while (heap.length > 1) {
+            const left = heap.shift();
+            const right = heap.shift();
+            const newNode = {
+                char: null,
+                freq: left.freq + right.freq,
+                left: left,
+                right: right
+            };
+            heap.push(newNode);
+            heap.sort((a, b) => a.freq - b.freq);
+        }
+
+        const calculateBitLengths = (node, depth, bitLengths) => {
+            if (node.char !== null) {
+                bitLengths[node.char] = depth;
+            }
+            if (node.left) {
+                calculateBitLengths(node.left, depth + 1, bitLengths);
+            }
+            if (node.right) {
+                calculateBitLengths(node.right, depth + 1, bitLengths);
+            }
+        };
+
+        const bitLengths = {};
+        calculateBitLengths(heap[0], 0, bitLengths);
+
+        let totalBitLength = 0;
+        for (let i = 0; i < characters.length; i++) {
+            totalBitLength += bitLengths[characters[i]] * frequencies[i];
+        }
+        return totalBitLength;
+    };
+
+    const isTotalBitLengthCorrect = computedTotalBitLength === parseInt(totalBitLength);
 
     return (
         <div className="huffman-container">
@@ -64,7 +114,11 @@ const Huffman = ({
                     ))}
                 </tbody>
             </table>
-            {children}
+            {showAnswer && (
+                <h3 className={isTotalBitLengthCorrect ? 'green-text' : 'red-text'}>
+                    {computedTotalBitLength}
+                </h3>
+            )}
         </div>
     );
 }

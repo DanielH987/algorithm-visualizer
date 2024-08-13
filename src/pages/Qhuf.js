@@ -29,6 +29,7 @@ const Qhuf = () => {
   const [encodingInputs, setEncodingInputs] = useState(Array(7).fill(''));
   const [bitLengthInputs, setBitLengthInputs] = useState(Array(7).fill(''));
   const [totalBitLength, setTotalBitLength] = useState('');
+  const [showAnswer, setShowAnswer] = useState(false);
 
   const regenerate = () => {
     setRandomCharacters(generateRandomCharacters());
@@ -36,6 +37,7 @@ const Qhuf = () => {
     setEncodingInputs(Array(7).fill(''));
     setBitLengthInputs(Array(7).fill(''));
     setTotalBitLength('');
+    setShowAnswer(false);
   };
 
   const handleEncodingChange = (index, value) => {
@@ -60,6 +62,10 @@ const Qhuf = () => {
     }
   };
 
+  const toggleAnswer = () => {
+    setShowAnswer(!showAnswer);
+  };
+
   return (
     <div>
       <Huffman 
@@ -71,10 +77,12 @@ const Qhuf = () => {
         onEncodingChange={handleEncodingChange}
         onBitLengthChange={handleBitLengthChange}
         onTotalBitLengthChange={handleTotalBitLengthChange}
-        children={
-          <button className='styled-button' onClick={regenerate}>Generate New</button>
-        }
+        showAnswer={showAnswer}
       />
+      <div className='styled-container'>
+        <button className='styled-button' onClick={regenerate}>Generate New</button>
+        {!showAnswer && <button className='styled-button' onClick={toggleAnswer}>Show Answer</button>}
+      </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the QHUF Page!</h2>
         <p>(1) Report the total bits used (sum of length times frequency for each letter).</p>
