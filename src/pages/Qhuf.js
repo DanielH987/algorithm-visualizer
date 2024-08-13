@@ -81,7 +81,7 @@ const Qhuf = () => {
       />
       <div className='styled-container'>
         <button className='styled-button' onClick={regenerate}>Generate New</button>
-        <button className='styled-button' onClick={toggleAnswer}>Show Answer</button>
+        {!showAnswer && <button className='styled-button' onClick={toggleAnswer}>Show Answer</button>}
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the QHUF Page!</h2>
