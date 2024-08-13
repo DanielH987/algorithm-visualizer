@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Huffman.css';
 
 const Huffman = ({
@@ -13,6 +13,60 @@ const Huffman = ({
     showAnswer
 }) => {
     const staticWords = ['Character', 'Frequency', 'Encoding', 'Bit Length', 'Total Bit Length'];
+    const [computedTotalBitLength, setComputedTotalBitLength] = useState('');
+
+    useEffect(() => {
+        // Compute the Huffman encoding and total bit length when the component mounts or updates
+        const totalLength = computeHuffmanTotalBitLength(randomCharacters, randomNumbers);
+        setComputedTotalBitLength(totalLength);
+    }, [randomCharacters, randomNumbers]);
+
+    // Function to compute the total bit length using Huffman encoding
+    const computeHuffmanTotalBitLength = (characters, frequencies) => {
+        // Create a priority queue (min-heap) for the Huffman tree
+        const heap = [];
+        for (let i = 0; i < characters.length; i++) {
+            heap.push({ char: characters[i], freq: frequencies[i], left: null, right: null });
+        }
+        heap.sort((a, b) => a.freq - b.freq);
+
+        // Build the Huffman tree
+        while (heap.length > 1) {
+            const left = heap.shift();
+            const right = heap.shift();
+            const newNode = {
+                char: null,
+                freq: left.freq + right.freq,
+                left: left,
+                right: right
+            };
+            heap.push(newNode);
+            heap.sort((a, b) => a.freq - b.freq);
+        }
+
+        // Function to calculate the bit length for each character
+        const calculateBitLengths = (node, depth, bitLengths) => {
+            if (node.char !== null) {
+                bitLengths[node.char] = depth;
+            }
+            if (node.left) {
+                calculateBitLengths(node.left, depth + 1, bitLengths);
+            }
+            if (node.right) {
+                calculateBitLengths(node.right, depth + 1, bitLengths);
+            }
+        };
+
+        const bitLengths = {};
+        calculateBitLengths(heap[0], 0, bitLengths);
+
+        // Calculate the total bit length
+        let totalBitLength = 0;
+        for (let i = 0; i < characters.length; i++) {
+            totalBitLength += bitLengths[characters[i]] * frequencies[i];
+        }
+        return totalBitLength;
+    };
 
     return (
         <div className="huffman-container">
@@ -64,8 +118,7 @@ const Huffman = ({
                     ))}
                 </tbody>
             </table>
-            {/* // TODO: implement Huffman encoding logic */}
-            {showAnswer && <h3>This is the answer</h3>}
+            {showAnswer && <h3>{computedTotalBitLength}</h3>}
         </div>
     );
 }
