@@ -6,8 +6,10 @@ const Huffman = ({
     randomNumbers,
     encodingInputs,
     bitLengthInputs,
+    totalBitLength,
     onEncodingChange,
     onBitLengthChange,
+    onTotalBitLengthChange,
     children
 }) => {
     const staticWords = ['Character', 'Frequency', 'Encoding', 'Bit Length', 'Total Bit Length'];
@@ -50,8 +52,8 @@ const Huffman = ({
                                             <td key={colIndex} colSpan={7}>
                                                 <input
                                                     type="text"
-                                                    value={bitLengthInputs[colIndex]}
-                                                    onChange={(e) => onBitLengthChange(colIndex, e.target.value)}
+                                                    value={totalBitLength}
+                                                    onChange={(e) => onTotalBitLengthChange(e.target.value)}
                                                 />
                                             </td>
                                         );
