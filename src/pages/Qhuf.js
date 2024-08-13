@@ -28,12 +28,14 @@ const Qhuf = () => {
   const [randomNumbers, setRandomNumbers] = useState(generateRandomNumbers());
   const [encodingInputs, setEncodingInputs] = useState(Array(7).fill(''));
   const [bitLengthInputs, setBitLengthInputs] = useState(Array(7).fill(''));
+  const [totalBitLength, setTotalBitLength] = useState('');
 
   const regenerate = () => {
     setRandomCharacters(generateRandomCharacters());
     setRandomNumbers(generateRandomNumbers());
     setEncodingInputs(Array(7).fill(''));
     setBitLengthInputs(Array(7).fill(''));
+    setTotalBitLength('');
   };
 
   const handleEncodingChange = (index, value) => {
@@ -52,6 +54,12 @@ const Qhuf = () => {
     }
   };
 
+  const handleTotalBitLengthChange = (value) => {
+    if (/^\d*$/.test(value)) {
+        setTotalBitLength(value);
+    }
+  };
+
   return (
     <div>
       <Huffman 
@@ -59,8 +67,10 @@ const Qhuf = () => {
         randomNumbers={randomNumbers} 
         encodingInputs={encodingInputs}
         bitLengthInputs={bitLengthInputs}
+        totalBitLength={totalBitLength}
         onEncodingChange={handleEncodingChange}
         onBitLengthChange={handleBitLengthChange}
+        onTotalBitLengthChange={handleTotalBitLengthChange}
         children={
           <button className='styled-button' onClick={regenerate}>Generate New</button>
         }
