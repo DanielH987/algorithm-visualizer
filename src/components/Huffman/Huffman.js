@@ -10,7 +10,7 @@ const Huffman = ({
     onEncodingChange,
     onBitLengthChange,
     onTotalBitLengthChange,
-    children
+    showAnswer
 }) => {
     const staticWords = ['Character', 'Frequency', 'Encoding', 'Bit Length', 'Total Bit Length'];
 
@@ -64,7 +64,8 @@ const Huffman = ({
                     ))}
                 </tbody>
             </table>
-            {children}
+            {/* // TODO: implement Huffman encoding logic */}
+            {showAnswer && <h3>This is the answer</h3>}
         </div>
     );
 }
