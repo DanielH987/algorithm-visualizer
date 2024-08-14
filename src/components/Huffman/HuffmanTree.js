@@ -5,7 +5,7 @@ import './HuffmanTree.css';
 const Node = ({ number, index, moveNode }) => {
     const [isHovered, setIsHovered] = useState(false);
 
-    const [{ isDragging }, drag] = useDrag(() => ({
+    const [, drag] = useDrag(() => ({
         type: 'node',
         item: { index },
         collect: (monitor) => ({
