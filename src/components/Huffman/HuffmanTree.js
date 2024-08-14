@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import './HuffmanTree.css';
 
-const Node = ({ number, index, moveNode }) => {
-    const [{ isDragging }, drag] = useDrag(() => ({
+const Node = ({ number, index, onNodeDrop }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const [, drag] = useDrag(() => ({
         type: 'node',
         item: { index },
         collect: (monitor) => ({
@@ -13,21 +15,26 @@ const Node = ({ number, index, moveNode }) => {
 
     const [, drop] = useDrop(() => ({
         accept: 'node',
-        hover: (draggedItem) => {
+        hover: () => {
+            setIsHovered(true);
+        },
+        drop: (draggedItem) => {
+            setIsHovered(false);
             if (draggedItem.index !== index) {
-                moveNode(draggedItem.index, index);
-                draggedItem.index = index;
+                onNodeDrop(draggedItem.index, index);
             }
         },
+        collect: (monitor) => {
+            if (!monitor.isOver()) {
+                setIsHovered(false);
+            }
+        }
     }));
 
     return (
         <div
             ref={(node) => drag(drop(node))}
-            className="node"
-            style={{
-                opacity: isDragging ? 0.5 : 1,
-            }}
+            className={`node ${isHovered ? 'highlight' : ''}`}
         >
             {number}
         </div>
@@ -36,27 +43,58 @@ const Node = ({ number, index, moveNode }) => {
 
 const HuffmanTree = ({ randomNumbers }) => {
     const [numbers, setNumbers] = useState(randomNumbers);
+    const [dropdownPosition, setDropdownPosition] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [pendingMove, setPendingMove] = useState(null);
 
     const moveNode = (fromIndex, toIndex) => {
         setNumbers((prevNumbers) => {
             const updatedNumbers = [...prevNumbers];
-            // Swap the elements
             [updatedNumbers[fromIndex], updatedNumbers[toIndex]] = [updatedNumbers[toIndex], updatedNumbers[fromIndex]];
             return updatedNumbers;
         });
     };
-    
+
+    const handleNodeDrop = (fromIndex, toIndex) => {
+        setPendingMove({ fromIndex, toIndex });
+
+        const nodeElement = document.querySelectorAll('.node')[toIndex];
+        const rect = nodeElement.getBoundingClientRect();
+        setDropdownPosition({ top: rect.bottom, left: rect.left });
+        setShowDropdown(true);
+    };
+
+    const handleOptionSelect = (option) => {
+        if (option === 'Move Node' && pendingMove) {
+            moveNode(pendingMove.fromIndex, pendingMove.toIndex);
+        } else {
+            setPendingMove(null);
+        }
+        setShowDropdown(false);
+    };
+
     return (
-        <div className="huffman-tree">
-            {numbers.map((number, index) => (
-                <Node
-                    key={index}
-                    index={index}
-                    number={number}
-                    moveNode={moveNode}
-                />
-            ))}
-        </div>
+        <table className="huffman-tree">
+            <tr>
+                {numbers.map((number, index) => (
+                    <td key={index}>
+                        <Node
+                            index={index}
+                            number={number}
+                            onNodeDrop={handleNodeDrop}
+                        />
+                    </td>
+                ))}
+            </tr>
+            {showDropdown && (
+                <div className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
+                    <ul>
+                        <li onClick={() => handleOptionSelect('Move Node')}>Move Node</li>
+                        <li onClick={() => handleOptionSelect('Add Nodes')}>Add Nodes</li>
+                    </ul>
+                </div>
+            )}
+        </table>
     );
 }
 
