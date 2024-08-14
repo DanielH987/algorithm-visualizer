@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import './HuffmanTree.css';
 
 const Node = ({ number, index, moveNode }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
     const [{ isDragging }, drag] = useDrag(() => ({
         type: 'node',
         item: { index },
@@ -13,21 +15,26 @@ const Node = ({ number, index, moveNode }) => {
 
     const [, drop] = useDrop(() => ({
         accept: 'node',
-        hover: (draggedItem) => {
+        hover: () => {
+            setIsHovered(true);
+        },
+        drop: (draggedItem) => {
+            setIsHovered(false);
             if (draggedItem.index !== index) {
                 moveNode(draggedItem.index, index);
-                draggedItem.index = index;
             }
         },
+        collect: (monitor) => {
+            if (!monitor.isOver()) {
+                setIsHovered(false);
+            }
+        }
     }));
 
     return (
         <div
             ref={(node) => drag(drop(node))}
-            className="node"
-            style={{
-                opacity: isDragging ? 0.5 : 1,
-            }}
+            className={`node ${isHovered ? 'highlight' : ''}`}
         >
             {number}
         </div>
@@ -40,7 +47,6 @@ const HuffmanTree = ({ randomNumbers }) => {
     const moveNode = (fromIndex, toIndex) => {
         setNumbers((prevNumbers) => {
             const updatedNumbers = [...prevNumbers];
-            // Swap the elements
             [updatedNumbers[fromIndex], updatedNumbers[toIndex]] = [updatedNumbers[toIndex], updatedNumbers[fromIndex]];
             return updatedNumbers;
         });
