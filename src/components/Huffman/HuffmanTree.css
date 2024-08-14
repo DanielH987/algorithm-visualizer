@@ -1,22 +1,16 @@
 .huffman-tree {
-    display: table;
     width: 100%;
+    border-collapse: collapse;
     table-layout: fixed;
     text-align: center;
 }
 
-.huffman-tree-row {
-    display: table-row;
-}
-
-.huffman-tree-cell {
-    display: table-cell;
-    vertical-align: middle;
+.huffman-tree td {
     padding: 10px;
 }
 
 .node {
-    margin: 10px;
+    margin: 0;
     padding: 20px;
     border: 1px solid #ccc;
     text-align: center;
