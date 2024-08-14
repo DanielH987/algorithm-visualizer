@@ -1,38 +1,32 @@
-.huffman-tree-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .huffman-tree {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
-}
-
-.tree-node {
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.node-content {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.tree-children {
-    display: flex;
-    justify-content: space-around;
+    justify-content: center;
     width: 100%;
 }
 
-.green-text {
-    color: green;
+.node {
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-.red-text {
-    color: red;
+.node:hover {
+    background-color: #f0f0f0;
+}
+
+.node.highlight {
+    border-color: black;
+    border-width: 2px;
 }
