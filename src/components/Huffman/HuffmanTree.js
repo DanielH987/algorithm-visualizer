@@ -68,7 +68,6 @@ const HuffmanTree = ({ randomNumbers }) => {
         if (option === 'Move Node' && pendingMove) {
             moveNode(pendingMove.fromIndex, pendingMove.toIndex);
         } else {
-            // Option selected is not 'Move Node', no move occurs (reverts to original position)
             setPendingMove(null);
         }
         setShowDropdown(false);
@@ -76,14 +75,17 @@ const HuffmanTree = ({ randomNumbers }) => {
 
     return (
         <div className="huffman-tree">
-            {numbers.map((number, index) => (
-                <Node
-                    key={index}
-                    index={index}
-                    number={number}
-                    onNodeDrop={handleNodeDrop}
-                />
-            ))}
+            <div className="huffman-tree-row">
+                {numbers.map((number, index) => (
+                    <div className="huffman-tree-cell" key={index}>
+                        <Node
+                            index={index}
+                            number={number}
+                            onNodeDrop={handleNodeDrop}
+                        />
+                    </div>
+                ))}
+            </div>
             {showDropdown && (
                 <div className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                     <ul>
