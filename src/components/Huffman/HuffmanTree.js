@@ -74,18 +74,18 @@ const HuffmanTree = ({ randomNumbers }) => {
     };
 
     return (
-        <div className="huffman-tree">
-            <div className="huffman-tree-row">
+        <table className="huffman-tree">
+            <tr>
                 {numbers.map((number, index) => (
-                    <div className="huffman-tree-cell" key={index}>
+                    <td key={index}>
                         <Node
                             index={index}
                             number={number}
                             onNodeDrop={handleNodeDrop}
                         />
-                    </div>
+                    </td>
                 ))}
-            </div>
+            </tr>
             {showDropdown && (
                 <div className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                     <ul>
@@ -94,7 +94,7 @@ const HuffmanTree = ({ randomNumbers }) => {
                     </ul>
                 </div>
             )}
-        </div>
+        </table>
     );
 }
 
