@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import './HuffmanTree.css';
 
-const Node = ({ number, index, moveNode, onNodeDrop }) => {
+const Node = ({ number, index, onNodeDrop }) => {
     const [isHovered, setIsHovered] = useState(false);
 
     const [, drag] = useDrag(() => ({
@@ -21,8 +21,7 @@ const Node = ({ number, index, moveNode, onNodeDrop }) => {
         drop: (draggedItem) => {
             setIsHovered(false);
             if (draggedItem.index !== index) {
-                moveNode(draggedItem.index, index);
-                onNodeDrop(index); // Trigger the dropdown menu
+                onNodeDrop(draggedItem.index, index); // Pass the indices to the parent component
             }
         },
         collect: (monitor) => {
@@ -46,6 +45,7 @@ const HuffmanTree = ({ randomNumbers }) => {
     const [numbers, setNumbers] = useState(randomNumbers);
     const [dropdownPosition, setDropdownPosition] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
+    const [pendingMove, setPendingMove] = useState(null); // Store the pending move indices
 
     const moveNode = (fromIndex, toIndex) => {
         setNumbers((prevNumbers) => {
@@ -55,15 +55,23 @@ const HuffmanTree = ({ randomNumbers }) => {
         });
     };
 
-    const handleNodeDrop = (index) => {
-        const nodeElement = document.querySelectorAll('.node')[index];
+    const handleNodeDrop = (fromIndex, toIndex) => {
+        // Store the pending move but do not move the node yet
+        setPendingMove({ fromIndex, toIndex });
+
+        const nodeElement = document.querySelectorAll('.node')[toIndex];
         const rect = nodeElement.getBoundingClientRect();
         setDropdownPosition({ top: rect.bottom, left: rect.left });
         setShowDropdown(true);
     };
 
     const handleOptionSelect = (option) => {
-        console.log(`Option selected: ${option}`);
+        if (option === 'Move Node' && pendingMove) {
+            moveNode(pendingMove.fromIndex, pendingMove.toIndex);
+        } else {
+            // Option selected is not 'Move Node', no move occurs (reverts to original position)
+            setPendingMove(null);
+        }
         setShowDropdown(false);
     };
 
@@ -74,14 +82,13 @@ const HuffmanTree = ({ randomNumbers }) => {
                     key={index}
                     index={index}
                     number={number}
-                    moveNode={moveNode}
                     onNodeDrop={handleNodeDrop}
                 />
             ))}
             {showDropdown && (
                 <div className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                     <ul>
-                        <li onClick={() => handleOptionSelect('Option 1')}>Move Node</li>
+                        <li onClick={() => handleOptionSelect('Move Node')}>Move Node</li>
                         <li onClick={() => handleOptionSelect('Option 2')}>Add Nodes</li>
                     </ul>
                 </div>
