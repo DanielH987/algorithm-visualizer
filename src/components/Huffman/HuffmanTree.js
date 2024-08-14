@@ -21,7 +21,7 @@ const Node = ({ number, index, onNodeDrop }) => {
         drop: (draggedItem) => {
             setIsHovered(false);
             if (draggedItem.index !== index) {
-                onNodeDrop(draggedItem.index, index); // Pass the indices to the parent component
+                onNodeDrop(draggedItem.index, index);
             }
         },
         collect: (monitor) => {
@@ -45,7 +45,7 @@ const HuffmanTree = ({ randomNumbers }) => {
     const [numbers, setNumbers] = useState(randomNumbers);
     const [dropdownPosition, setDropdownPosition] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
-    const [pendingMove, setPendingMove] = useState(null); // Store the pending move indices
+    const [pendingMove, setPendingMove] = useState(null);
 
     const moveNode = (fromIndex, toIndex) => {
         setNumbers((prevNumbers) => {
@@ -56,7 +56,6 @@ const HuffmanTree = ({ randomNumbers }) => {
     };
 
     const handleNodeDrop = (fromIndex, toIndex) => {
-        // Store the pending move but do not move the node yet
         setPendingMove({ fromIndex, toIndex });
 
         const nodeElement = document.querySelectorAll('.node')[toIndex];
@@ -89,7 +88,7 @@ const HuffmanTree = ({ randomNumbers }) => {
                 <div className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                     <ul>
                         <li onClick={() => handleOptionSelect('Move Node')}>Move Node</li>
-                        <li onClick={() => handleOptionSelect('Option 2')}>Add Nodes</li>
+                        <li onClick={() => handleOptionSelect('Add Nodes')}>Add Nodes</li>
                     </ul>
                 </div>
             )}
