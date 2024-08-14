@@ -1,9 +1,18 @@
 .huffman-tree {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+    display: table;
     width: 100%;
+    table-layout: fixed;
+    text-align: center;
+}
+
+.huffman-tree-row {
+    display: table-row;
+}
+
+.huffman-tree-cell {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 10px;
 }
 
 .node {
