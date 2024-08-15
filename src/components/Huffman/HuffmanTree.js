@@ -31,6 +31,10 @@ const Node = ({ number, index, onNodeDrop }) => {
         }
     }));
 
+    if (number === null) {
+        return <div className="node empty-node"></div>;
+    }
+
     return (
         <div
             ref={(node) => drag(drop(node))}
@@ -42,16 +46,35 @@ const Node = ({ number, index, onNodeDrop }) => {
 };
 
 const HuffmanTree = ({ randomNumbers }) => {
+    const [colspans, setColspans] = useState(Array(randomNumbers.length).fill(1));
     const [numbers, setNumbers] = useState(randomNumbers);
     const [dropdownPosition, setDropdownPosition] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const [pendingMove, setPendingMove] = useState(null);
     const dropdownRef = useRef(null);
 
-    const moveNode = (fromIndex, toIndex) => {
+    const moveNode = (fromIndex, toIndex, shouldAddNodes = false) => {
         setNumbers((prevNumbers) => {
             const updatedNumbers = [...prevNumbers];
-            [updatedNumbers[fromIndex], updatedNumbers[toIndex]] = [updatedNumbers[toIndex], updatedNumbers[fromIndex]];
+            const updatedColspans = [...colspans];
+    
+            if (shouldAddNodes) {
+                // Create a new node that is the sum of the two nodes
+                const sum = updatedNumbers[fromIndex] + updatedNumbers[toIndex];
+    
+                // Replace the first node with the sum and merge their column spans
+                updatedNumbers[fromIndex] = sum;
+                updatedColspans[fromIndex] += updatedColspans[toIndex];
+    
+                // Mark the second node as null
+                updatedNumbers[toIndex] = null;
+                updatedColspans[toIndex] = 0; // No columns for null node
+            } else {
+                // Handle swapping logic if necessary
+                [updatedNumbers[fromIndex], updatedNumbers[toIndex]] = [updatedNumbers[toIndex], updatedNumbers[fromIndex]];
+            }
+    
+            setColspans(updatedColspans);
             return updatedNumbers;
         });
     };
@@ -70,14 +93,15 @@ const HuffmanTree = ({ randomNumbers }) => {
     };
 
     const handleOptionSelect = (option) => {
-        if (option === 'Move Node' && pendingMove) {
-            moveNode(pendingMove.fromIndex, pendingMove.toIndex);
-        } else if (option === 'Add Nodes' && pendingMove) {
-            if (areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex)) {
-                // Implement Add Nodes logic here
-                console.log('Nodes are adjacent. Implement Add Nodes logic.');
-            } else {
-                console.log('Nodes are not adjacent. Add Nodes operation is not allowed.');
+        if (pendingMove) {
+            if (option === 'Move Node') {
+                moveNode(pendingMove.fromIndex, pendingMove.toIndex);
+            } else if (option === 'Add Nodes') {
+                if (areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex)) {
+                    moveNode(pendingMove.fromIndex, pendingMove.toIndex, true);
+                } else {
+                    console.log('Nodes are not adjacent. Add Nodes operation is not allowed.');
+                }
             }
         }
         setPendingMove(null);
@@ -106,15 +130,19 @@ const HuffmanTree = ({ randomNumbers }) => {
         <table className="huffman-tree">
             <tbody>
                 <tr>
-                    {numbers.map((number, index) => (
-                        <td key={index}>
-                            <Node
-                                index={index}
-                                number={number}
-                                onNodeDrop={handleNodeDrop}
-                            />
-                        </td>
-                    ))}
+                    {numbers.map((number, index) => {
+                        if (number === null) return null; // Skip null nodes
+
+                        return (
+                            <td key={index} colSpan={colspans[index]}>
+                                <Node
+                                    index={index}
+                                    number={number}
+                                    onNodeDrop={handleNodeDrop}
+                                />
+                            </td>
+                        );
+                    })}
                 </tr>
             </tbody>
             {showDropdown && (
