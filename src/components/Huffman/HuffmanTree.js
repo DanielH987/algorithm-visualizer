@@ -65,16 +65,25 @@ const HuffmanTree = ({ randomNumbers }) => {
         setShowDropdown(true);
     };
 
+    const areNodesAdjacent = (index1, index2) => {
+        return Math.abs(index1 - index2) === 1;
+    };
+
     const handleOptionSelect = (option) => {
         if (option === 'Move Node' && pendingMove) {
             moveNode(pendingMove.fromIndex, pendingMove.toIndex);
-        } else {
-            setPendingMove(null);
+        } else if (option === 'Add Nodes' && pendingMove) {
+            if (areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex)) {
+                // Implement Add Nodes logic here
+                console.log('Nodes are adjacent. Implement Add Nodes logic.');
+            } else {
+                console.log('Nodes are not adjacent. Add Nodes operation is not allowed.');
+            }
         }
+        setPendingMove(null);
         setShowDropdown(false);
     };
 
-    // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -111,8 +120,13 @@ const HuffmanTree = ({ randomNumbers }) => {
             {showDropdown && (
                 <div ref={dropdownRef} className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                     <ul>
-                        <li onClick={() => handleOptionSelect('Move Node')}>Move Node</li>
-                        <li onClick={() => handleOptionSelect('Add Nodes')}>Add Nodes</li>
+                        <li onClick={() => handleOptionSelect('Move Node')}>Swap Nodes</li>
+                        <li 
+                            onClick={() => areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? handleOptionSelect('Add Nodes') : null}
+                            className={!areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? 'disabled' : ''}
+                        >
+                            Sum Nodes
+                        </li>
                     </ul>
                 </div>
             )}
