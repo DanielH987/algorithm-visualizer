@@ -58,3 +58,8 @@
 .dropdown-menu li:hover {
     background-color: #f0f0f0;
 }
+
+.disabled {
+    pointer-events: none;
+    color: grey;
+}
