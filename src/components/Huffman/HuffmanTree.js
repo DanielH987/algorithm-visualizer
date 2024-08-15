@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import './HuffmanTree.css';
 
@@ -46,6 +46,7 @@ const HuffmanTree = ({ randomNumbers }) => {
     const [dropdownPosition, setDropdownPosition] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const [pendingMove, setPendingMove] = useState(null);
+    const dropdownRef = useRef(null);
 
     const moveNode = (fromIndex, toIndex) => {
         setNumbers((prevNumbers) => {
@@ -73,21 +74,42 @@ const HuffmanTree = ({ randomNumbers }) => {
         setShowDropdown(false);
     };
 
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        };
+
+        if (showDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showDropdown]);
+
     return (
         <table className="huffman-tree">
-            <tr>
-                {numbers.map((number, index) => (
-                    <td key={index}>
-                        <Node
-                            index={index}
-                            number={number}
-                            onNodeDrop={handleNodeDrop}
-                        />
-                    </td>
-                ))}
-            </tr>
+            <tbody>
+                <tr>
+                    {numbers.map((number, index) => (
+                        <td key={index}>
+                            <Node
+                                index={index}
+                                number={number}
+                                onNodeDrop={handleNodeDrop}
+                            />
+                        </td>
+                    ))}
+                </tr>
+            </tbody>
             {showDropdown && (
-                <div className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
+                <div ref={dropdownRef} className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                     <ul>
                         <li onClick={() => handleOptionSelect('Move Node')}>Move Node</li>
                         <li onClick={() => handleOptionSelect('Add Nodes')}>Add Nodes</li>
