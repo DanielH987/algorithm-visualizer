@@ -150,9 +150,6 @@ const HuffmanTree = ({ randomNumbers }) => {
 
     return (
         <div>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button className='styled-button' onClick={revertLastAction} disabled={history.length === 0}>Undo</button>
-            </div>
             <table className="huffman-tree">
                 <tbody>
                     <tr>
@@ -185,6 +182,9 @@ const HuffmanTree = ({ randomNumbers }) => {
                     </div>
                 )}
             </table>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <button className='styled-button' onClick={revertLastAction} disabled={history.length === 0}>Undo</button>
+            </div>
         </div>
     );
 }
