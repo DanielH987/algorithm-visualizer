@@ -69,6 +69,7 @@ const HuffmanTree = ({ randomNumbers }) => {
                 // Mark the second node as null
                 updatedNumbers[toIndex] = null;
                 updatedColspans[toIndex] = 0; // No columns for null node
+    
             } else {
                 // Handle swapping logic if necessary
                 [updatedNumbers[fromIndex], updatedNumbers[toIndex]] = [updatedNumbers[toIndex], updatedNumbers[fromIndex]];
@@ -77,7 +78,7 @@ const HuffmanTree = ({ randomNumbers }) => {
             setColspans(updatedColspans);
             return updatedNumbers;
         });
-    };
+    };    
 
     const handleNodeDrop = (fromIndex, toIndex) => {
         setPendingMove({ fromIndex, toIndex });
@@ -89,8 +90,19 @@ const HuffmanTree = ({ randomNumbers }) => {
     };
 
     const areNodesAdjacent = (index1, index2) => {
-        return Math.abs(index1 - index2) === 1;
+        const minIndex = Math.min(index1, index2);
+        const maxIndex = Math.max(index1, index2);
+        
+        // Traverse between the two indexes and check if there's any non-null node between them
+        for (let i = minIndex + 1; i < maxIndex; i++) {
+            if (numbers[i] !== null) {
+                return false; // Not adjacent if there's a non-null node in between
+            }
+        }
+        
+        return true;
     };
+    
 
     const handleOptionSelect = (option) => {
         if (pendingMove) {
