@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Tree from '../components/Heap/Tree';
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 
 const Qhp = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
