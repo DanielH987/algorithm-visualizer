@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 
 const Qbst = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
