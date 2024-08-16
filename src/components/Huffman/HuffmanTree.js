@@ -70,13 +70,14 @@ const HuffmanTree = ({ randomNumbers }) => {
     
             } else {
                 [updatedNumbers[fromIndex], updatedNumbers[toIndex]] = [updatedNumbers[toIndex], updatedNumbers[fromIndex]];
+                [updatedColspans[fromIndex], updatedColspans[toIndex]] = [updatedColspans[toIndex], updatedColspans[fromIndex]];
             }
     
             setColspans(updatedColspans);
             return updatedNumbers;
         });
-    };    
-
+    };
+    
     const handleNodeDrop = (fromIndex, toIndex, event) => {
         setPendingMove({ fromIndex, toIndex });
     
