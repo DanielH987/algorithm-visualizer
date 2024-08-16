@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import QuicksortPartition from '../components/Quicksort/QuicksortPartition';
 import { FaEyeSlash } from 'react-icons/fa';
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 
 const Qqp = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
