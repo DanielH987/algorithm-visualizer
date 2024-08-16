@@ -52,9 +52,13 @@ const HuffmanTree = ({ randomNumbers }) => {
     const [dropdownPosition, setDropdownPosition] = useState(null);
     const [showDropdown, setShowDropdown] = useState(false);
     const [pendingMove, setPendingMove] = useState(null);
+    const [history, setHistory] = useState([]); // State to keep track of history for revert feature
     const dropdownRef = useRef(null);
 
     const moveNode = (fromIndex, toIndex, shouldAddNodes = false) => {
+        // Save the current state to the history before making changes
+        setHistory(prevHistory => [...prevHistory, { numbers, colspans }]);
+        
         setNumbers((prevNumbers) => {
             const updatedNumbers = [...prevNumbers];
             const updatedColspans = [...colspans];
@@ -101,7 +105,6 @@ const HuffmanTree = ({ randomNumbers }) => {
         return true;
     };
     
-
     const handleOptionSelect = (option) => {
         if (pendingMove) {
             if (option === 'Swap Nodes') {
@@ -116,6 +119,15 @@ const HuffmanTree = ({ randomNumbers }) => {
         }
         setPendingMove(null);
         setShowDropdown(false);
+    };
+
+    const revertLastAction = () => {
+        if (history.length > 0) {
+            const lastState = history.pop(); // Get the last state from history
+            setNumbers(lastState.numbers);
+            setColspans(lastState.colspans);
+            setHistory([...history]); // Update history without the last state
+        }
     };
 
     useEffect(() => {
@@ -137,38 +149,43 @@ const HuffmanTree = ({ randomNumbers }) => {
     }, [showDropdown]);
 
     return (
-        <table className="huffman-tree">
-            <tbody>
-                <tr>
-                    {numbers.map((number, index) => {
-                        if (number === null) return null;
+        <div>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <button className='styled-button' onClick={revertLastAction} disabled={history.length === 0}>Undo</button>
+            </div>
+            <table className="huffman-tree">
+                <tbody>
+                    <tr>
+                        {numbers.map((number, index) => {
+                            if (number === null) return null;
 
-                        return (
-                            <td key={index} colSpan={colspans[index]}>
-                                <Node
-                                    index={index}
-                                    number={number}
-                                    onNodeDrop={handleNodeDrop}
-                                />
-                            </td>
-                        );
-                    })}
-                </tr>
-            </tbody>
-            {showDropdown && (
-                <div ref={dropdownRef} className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
-                    <ul>
-                        <li onClick={() => handleOptionSelect('Swap Nodes')}>Swap Nodes</li>
-                        <li 
-                            onClick={() => areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? handleOptionSelect('Add Nodes') : null}
-                            className={!areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? 'disabled' : ''}
-                        >
-                            Add Nodes
-                        </li>
-                    </ul>
-                </div>
-            )}
-        </table>
+                            return (
+                                <td key={index} colSpan={colspans[index]}>
+                                    <Node
+                                        index={index}
+                                        number={number}
+                                        onNodeDrop={handleNodeDrop}
+                                    />
+                                </td>
+                            );
+                        })}
+                    </tr>
+                </tbody>
+                {showDropdown && (
+                    <div ref={dropdownRef} className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
+                        <ul>
+                            <li onClick={() => handleOptionSelect('Swap Nodes')}>Swap Nodes</li>
+                            <li 
+                                onClick={() => areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? handleOptionSelect('Add Nodes') : null}
+                                className={!areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? 'disabled' : ''}
+                            >
+                                Add Nodes
+                            </li>
+                        </ul>
+                    </div>
+                )}
+            </table>
+        </div>
     );
 }
 
