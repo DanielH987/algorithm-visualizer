@@ -1,6 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import update from 'immutability-helper';
 import TreeNode from './TreeNode';
+import './Tree.css';
 
 const generateRandomArray = () => {
   const minLength = 10;
