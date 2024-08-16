@@ -94,7 +94,7 @@ const HuffmanTree = ({ randomNumbers }) => {
 
     const handleOptionSelect = (option) => {
         if (pendingMove) {
-            if (option === 'Move Node') {
+            if (option === 'Swap Nodes') {
                 moveNode(pendingMove.fromIndex, pendingMove.toIndex);
             } else if (option === 'Add Nodes') {
                 if (areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex)) {
@@ -148,12 +148,12 @@ const HuffmanTree = ({ randomNumbers }) => {
             {showDropdown && (
                 <div ref={dropdownRef} className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
                     <ul>
-                        <li onClick={() => handleOptionSelect('Move Node')}>Swap Nodes</li>
+                        <li onClick={() => handleOptionSelect('Swap Nodes')}>Swap Nodes</li>
                         <li 
                             onClick={() => areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? handleOptionSelect('Add Nodes') : null}
                             className={!areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? 'disabled' : ''}
                         >
-                            Sum Nodes
+                            Add Nodes
                         </li>
                     </ul>
                 </div>
