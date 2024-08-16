@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Huffman from '../components/Huffman/Huffman';
 import HuffmanTree from '../components/Huffman/HuffmanTree';
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 
 const Qhuf = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
