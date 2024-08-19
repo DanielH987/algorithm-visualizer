@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import './TreeNode.css';
 
 const ItemType = 'NODE';
 

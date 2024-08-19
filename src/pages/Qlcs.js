@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import LongCommonSub from '../components/LongCommonSub/LongCommonSub';
 import { FaEyeSlash } from 'react-icons/fa';
-import Modal from '../components/Modal';
+import Modal from '../components/Modal/Modal';
 
 const Qlcs = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);

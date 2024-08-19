@@ -1,6 +1,7 @@
 // Box.js
 import React from 'react';
 import { useDrag, useDrop } from 'react-dnd';
+import './Box.css';
 
 const Box = ({ value, index, moveBox, onDragOver, onDragLeave, highlight, pivot, boxStyleOverride }) => {
     const [{ isDragging }, dragRef] = useDrag({

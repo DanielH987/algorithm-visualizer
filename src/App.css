@@ -63,7 +63,6 @@ footer {
   text-align: center;
 }
 
-/* Responsive styling */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -112,61 +111,6 @@ footer {
   }
 }
 
-.tree {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-
-.tree-node-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-}
-
-.tree-node {
-  margin: 10px;
-  padding: 20px;
-  border: 1px solid #ccc;
-  text-align: center;
-  background-color: #fff;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.tree-node:hover {
-  background-color: #f0f0f0;
-}
-
-.tree-node.highlight {
-  border-color: black;
-  border-width: 2px;
-}
-
-.tree-children {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-
-.tree-children::before {
-  left: 0;
-  border-right: 1px solid #ccc;
-}
-
-.tree-children::after {
-  right: 0;
-  border-left: 1px solid #ccc;
-}
-
 .button-container {
   text-align: center;
   margin-top: 20px;
@@ -191,6 +135,12 @@ footer {
   background-color: #ccc;
 }
 
+.styled-button:disabled {
+  background-color: #a1a1a1;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .correct {
   color: green;
 }
@@ -199,70 +149,8 @@ footer {
   color: red;
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  position: relative;
-}
-
 p {
   text-align: center;
-}
-
-.box-container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  height: 25vh;
-}
-
-.box {
-  padding: 20px;
-  border: 1px solid #ccc;
-  text-align: center;
-  background-color: #fff;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.box:hover {
-  background-color: #f0f0f0;
-}
-
-.box.is-dragging {
-  opacity: 0.5;
-}
-
-.box.highlight {
-  border-color: black;
-  border-width: 2px;
-}
-
-.box-yellow {
-  background-color: yellow;
-}
-
-.box-blue {
-  background-color: lightblue;
 }
 
 .styled-container {

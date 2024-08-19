@@ -1,38 +1,66 @@
-.huffman-tree-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
 .huffman-tree {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.tree-node {
-    margin: 10px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-
-.node-content {
-    text-align: center;
-    margin-bottom: 10px;
-}
-
-.tree-children {
-    display: flex;
-    justify-content: space-around;
     width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    text-align: center;
 }
 
-.green-text {
-    color: green;
+.huffman-tree td {
+    padding: 10px;
+    vertical-align: middle;
+    text-align: center;
 }
 
-.red-text {
-    color: red;
+.node {
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    text-align: center;
+    background-color: #fff;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.node:hover {
+    background-color: #f0f0f0;
+}
+
+.node.highlight {
+    border-color: black;
+    border-width: 2px;
+}
+
+.dropdown-menu {
+    position: absolute;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    z-index: 1000;
+}
+
+.dropdown-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.dropdown-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+.disabled {
+    pointer-events: none;
+    color: grey;
+    cursor: not-allowed;
 }

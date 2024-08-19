@@ -1,124 +1,190 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { useDrag, useDrop } from 'react-dnd';
 import './HuffmanTree.css';
 
-const HuffmanTree = ({
-    randomCharacters,
-    randomNumbers,
-    encodingInputs,
-    bitLengthInputs,
-    totalBitLength,
-    onEncodingChange,
-    onBitLengthChange,
-    onTotalBitLengthChange,
-    showAnswer
-}) => {
-    const [computedTotalBitLength, setComputedTotalBitLength] = useState('');
+const Node = ({ number, index, onNodeDrop }) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    const [, drag] = useDrag(() => ({
+        type: 'node',
+        item: { index },
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        }),
+    }));
+
+    const [, drop] = useDrop(() => ({
+        accept: 'node',
+        hover: () => {
+            setIsHovered(true);
+        },
+        drop: (draggedItem, monitor) => {
+            setIsHovered(false);
+            if (draggedItem.index !== index) {
+                const event = monitor.getClientOffset();
+                onNodeDrop(draggedItem.index, index, event);
+            }
+        },
+        collect: (monitor) => {
+            if (!monitor.isOver()) {
+                setIsHovered(false);
+            }
+        }
+    }));
+
+    if (number === null) {
+        return <div className="node empty-node"></div>;
+    }
+
+    return (
+        <div
+            ref={(node) => drag(drop(node))}
+            className={`node ${isHovered ? 'highlight' : ''}`}
+        >
+            {number}
+        </div>
+    );
+};
+
+const HuffmanTree = ({ randomNumbers }) => {
+    const [colspans, setColspans] = useState(Array(randomNumbers.length).fill(1));
+    const [numbers, setNumbers] = useState(randomNumbers);
+    const [dropdownPosition, setDropdownPosition] = useState(null);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [pendingMove, setPendingMove] = useState(null);
+    const [history, setHistory] = useState([]); // State to keep track of history for revert feature
+    const dropdownRef = useRef(null);
+
+    const moveNode = (fromIndex, toIndex, shouldAddNodes = false) => {
+        // Save the current state to the history before making changes
+        setHistory(prevHistory => [...prevHistory, { numbers, colspans }]);
+        
+        setNumbers((prevNumbers) => {
+            const updatedNumbers = [...prevNumbers];
+            const updatedColspans = [...colspans];
+    
+            if (shouldAddNodes) {
+                const sum = updatedNumbers[fromIndex] + updatedNumbers[toIndex];
+    
+                updatedNumbers[fromIndex] = sum;
+                updatedColspans[fromIndex] += updatedColspans[toIndex];
+    
+                updatedNumbers[toIndex] = null;
+                updatedColspans[toIndex] = 0;
+    
+            } else {
+                [updatedNumbers[fromIndex], updatedNumbers[toIndex]] = [updatedNumbers[toIndex], updatedNumbers[fromIndex]];
+                [updatedColspans[fromIndex], updatedColspans[toIndex]] = [updatedColspans[toIndex], updatedColspans[fromIndex]];
+            }
+    
+            setColspans(updatedColspans);
+            return updatedNumbers;
+        });
+    };
+    
+    const handleNodeDrop = (fromIndex, toIndex, event) => {
+        setPendingMove({ fromIndex, toIndex });
+    
+        const mouseX = event.x;
+        const mouseY = event.y;
+    
+        setDropdownPosition({ top: mouseY, left: mouseX });
+        setShowDropdown(true);
+    };    
+
+    const areNodesAdjacent = (index1, index2) => {
+        const minIndex = Math.min(index1, index2);
+        const maxIndex = Math.max(index1, index2);
+        
+        for (let i = minIndex + 1; i < maxIndex; i++) {
+            if (numbers[i] !== null) {
+                return false;
+            }
+        }
+        
+        return true;
+    };
+    
+    const handleOptionSelect = (option) => {
+        if (pendingMove) {
+            if (option === 'Swap Nodes') {
+                moveNode(pendingMove.fromIndex, pendingMove.toIndex);
+            } else if (option === 'Add Nodes') {
+                if (areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex)) {
+                    moveNode(pendingMove.fromIndex, pendingMove.toIndex, true);
+                } else {
+                    console.log('Nodes are not adjacent. Add Nodes operation is not allowed.');
+                }
+            }
+        }
+        setPendingMove(null);
+        setShowDropdown(false);
+    };
+
+    const revertLastAction = () => {
+        if (history.length > 0) {
+            const lastState = history.pop(); // Get the last state from history
+            setNumbers(lastState.numbers);
+            setColspans(lastState.colspans);
+            setHistory([...history]); // Update history without the last state
+        }
+    };
 
     useEffect(() => {
-        const totalLength = computeHuffmanTotalBitLength(randomCharacters, randomNumbers);
-        setComputedTotalBitLength(totalLength);
-    }, [randomCharacters, randomNumbers]);
-
-    const computeHuffmanTotalBitLength = (characters, frequencies) => {
-        const heap = [];
-        for (let i = 0; i < characters.length; i++) {
-            heap.push({ char: characters[i], freq: frequencies[i], left: null, right: null });
-        }
-        heap.sort((a, b) => a.freq - b.freq);
-
-        while (heap.length > 1) {
-            const left = heap.shift();
-            const right = heap.shift();
-            const newNode = {
-                char: null,
-                freq: left.freq + right.freq,
-                left: left,
-                right: right
-            };
-            heap.push(newNode);
-            heap.sort((a, b) => a.freq - b.freq);
-        }
-
-        const calculateBitLengths = (node, depth, bitLengths) => {
-            if (node.char !== null) {
-                bitLengths[node.char] = depth;
-            }
-            if (node.left) {
-                calculateBitLengths(node.left, depth + 1, bitLengths);
-            }
-            if (node.right) {
-                calculateBitLengths(node.right, depth + 1, bitLengths);
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
             }
         };
 
-        const bitLengths = {};
-        calculateBitLengths(heap[0], 0, bitLengths);
-
-        let totalBitLength = 0;
-        for (let i = 0; i < characters.length; i++) {
-            totalBitLength += bitLengths[characters[i]] * frequencies[i];
+        if (showDropdown) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
         }
-        return totalBitLength;
-    };
 
-    const isTotalBitLengthCorrect = computedTotalBitLength === parseInt(totalBitLength);
-
-    const TreeNode = ({ node, depth }) => {
-        if (!node) return null;
-        return (
-            <div className="tree-node">
-                <div className="node-content">
-                    {node.char !== null ? (
-                        <>
-                            <div>Character: {node.char}</div>
-                            <div>Frequency: {node.freq}</div>
-                            <div>
-                                Encoding:
-                                <input
-                                    type="text"
-                                    value={encodingInputs[randomCharacters.indexOf(node.char)]}
-                                    onChange={(e) => onEncodingChange(randomCharacters.indexOf(node.char), e.target.value)}
-                                />
-                            </div>
-                            <div>
-                                Bit Length:
-                                <input
-                                    type="text"
-                                    value={bitLengthInputs[randomCharacters.indexOf(node.char)]}
-                                    onChange={(e) => onBitLengthChange(randomCharacters.indexOf(node.char), e.target.value)}
-                                />
-                            </div>
-                        </>
-                    ) : (
-                        <div>Frequency: {node.freq}</div>
-                    )}
-                </div>
-                <div className="tree-children">
-                    <TreeNode node={node.left} depth={depth + 1} />
-                    <TreeNode node={node.right} depth={depth + 1} />
-                </div>
-            </div>
-        );
-    };
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [showDropdown]);
 
     return (
-        <div className="huffman-tree-container">
-            <div className="huffman-tree">
-                <TreeNode node={computeHuffmanTotalBitLength(randomCharacters, randomNumbers, true)} depth={0} />
+        <div>
+            <table className="huffman-tree">
+                <tbody>
+                    <tr>
+                        {numbers.map((number, index) => {
+                            if (number === null) return null;
+
+                            return (
+                                <td key={index} colSpan={colspans[index]}>
+                                    <Node
+                                        index={index}
+                                        number={number}
+                                        onNodeDrop={handleNodeDrop}
+                                    />
+                                </td>
+                            );
+                        })}
+                    </tr>
+                </tbody>
+                {showDropdown && (
+                    <div ref={dropdownRef} className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
+                        <ul>
+                            <li onClick={() => handleOptionSelect('Swap Nodes')}>Swap Nodes</li>
+                            <li 
+                                onClick={() => areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? handleOptionSelect('Add Nodes') : null}
+                                className={!areNodesAdjacent(pendingMove.fromIndex, pendingMove.toIndex) ? 'disabled' : ''}
+                            >
+                                Add Nodes
+                            </li>
+                        </ul>
+                    </div>
+                )}
+            </table>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <button className='styled-button' onClick={revertLastAction} disabled={history.length === 0}>Undo</button>
             </div>
-            <div className="total-bit-length">
-                <div>Total Bit Length:</div>
-                <input
-                    type="text"
-                    value={totalBitLength}
-                    onChange={(e) => onTotalBitLengthChange(e.target.value)}
-                />
-            </div>
-            {showAnswer && (
-                <h3 className={isTotalBitLengthCorrect ? 'green-text' : 'red-text'}>
-                    {computedTotalBitLength}
-                </h3>
-            )}
         </div>
     );
 }
