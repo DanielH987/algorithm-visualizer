@@ -1,37 +1,25 @@
-.node-tree-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.tree-builder {
+  padding: 20px;
 }
 
-.node-row {
+.main-row, .tree-row {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 10px;
 }
 
-.node {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0 10px;
-}
-
-.node-tree {
-  margin: 20px 0;
-}
-
-.node-value {
-  font-weight: bold;
+.node, .tree-node, .empty-node {
+  padding: 10px;
+  border: 1px solid #000;
+  margin: 0 5px;
+  min-width: 40px;
   text-align: center;
 }
 
-.node-children {
-  display: flex;
-  justify-content: center;
-  margin-top: 10px;
+.actions {
+  margin-top: 5px;
 }
 
-.node-child {
-  margin: 0 10px;
+button {
+  margin: 2px;
 }
