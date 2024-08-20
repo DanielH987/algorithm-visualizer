@@ -1,110 +1,80 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-// Component for rendering a node
-const Node = ({ value, onClick }) => {
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        border: "1px solid black",
-        padding: "10px",
-        margin: "5px",
-        cursor: "pointer",
-        display: "inline-block",
-      }}
-    >
-      {value}
-    </div>
-  );
-};
+const Test = () => {
+  const [mainRow, setMainRow] = useState([1, 2, 3, 4, 5, 6, 7]);
+  const [treeRows, setTreeRows] = useState([]);
 
-// Recursive Tree Node Component
-const TreeNode = ({ node }) => {
-  if (!node) return null;
-
-  return (
-    <div style={{ textAlign: "center" }}>
-      <div>{node.value}</div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        {node.children &&
-          node.children.map((child, index) => (
-            <div key={index} style={{ margin: "0 10px" }}>
-              <TreeNode node={child} />
-            </div>
-          ))}
-      </div>
-    </div>
-  );
-};
-
-const HuffmanTreeComponent = () => {
-  const [mainRow, setMainRow] = useState([5, 3, 8, 2, 6, 1, 7]);
-  const [treeNodes, setTreeNodes] = useState([]);
-
-  // Swap nodes
-  const swapNodes = (index1, index2) => {
+  // Swap function
+  const handleSwap = (index1, index2) => {
     const newRow = [...mainRow];
     [newRow[index1], newRow[index2]] = [newRow[index2], newRow[index1]];
     setMainRow(newRow);
   };
 
-  // Combine adjacent nodes
-  const combineNodes = (index) => {
-    const newRow = [...mainRow];
-    const combinedValue = newRow[index] + newRow[index + 1];
+  // Combine function
+  const handleCombine = (index) => {
+    if (index < mainRow.length - 1) {
+      const combinedValue = mainRow[index] + mainRow[index + 1];
+      const newMainRow = [
+        ...mainRow.slice(0, index),
+        combinedValue,
+        ...mainRow.slice(index + 2),
+      ];
 
-    // Create parent node with children
-    const parentNode = {
-      value: combinedValue,
-      children: [
-        { value: newRow[index] },
-        { value: newRow[index + 1] },
-      ],
-    };
+      const newRow = Array(mainRow.length).fill(null);
+      newRow[index] = mainRow[index];
+      newRow[index + 1] = mainRow[index + 1];
 
-    // Remove the two nodes and replace them with the parent node
-    newRow.splice(index, 2, combinedValue);
-    setMainRow(newRow);
-    setTreeNodes([...treeNodes, parentNode]);
+      setMainRow(newMainRow);
+      setTreeRows([newRow, ...treeRows]);
+    }
   };
 
   return (
     <div>
-      <h3>Main Row</h3>
-      <div>
+      <h2>Main Row</h2>
+      <div style={{ display: 'flex' }}>
         {mainRow.map((value, index) => (
-          <Node
-            key={index}
-            value={value}
-            onClick={() =>
-              index < mainRow.length - 1 ? combineNodes(index) : null
-            }
-          />
+          <div key={index} style={nodeStyle}>
+            {value}
+            <button onClick={() => handleCombine(index)}>Combine</button>
+          </div>
         ))}
       </div>
-
+      
       <h3>Swap Nodes</h3>
-      <div>
-        {mainRow.map((value, index) => (
+      <div style={{ display: 'flex' }}>
+        {mainRow.map((_, index) => (
           <button
             key={index}
-            onClick={() =>
-              index < mainRow.length - 1 ? swapNodes(index, index + 1) : null
-            }
+            onClick={() => handleSwap(index, (index + 1) % mainRow.length)}
           >
-            Swap {value} with {mainRow[index + 1] ?? "N/A"}
+            Swap {index} with {(index + 1) % mainRow.length}
           </button>
         ))}
       </div>
 
-      <h3>Tree Structure</h3>
-      <div>
-        {treeNodes.map((node, index) => (
-          <TreeNode key={index} node={node} />
-        ))}
-      </div>
+      <h2>Tree Rows</h2>
+      {treeRows.map((row, rowIndex) => (
+        <div key={rowIndex} style={{ display: 'flex' }}>
+          {row.map((value, index) => (
+            <div key={index} style={nodeStyle}>
+              {value !== null ? value : ''}
+            </div>
+          ))}
+        </div>
+      ))}
     </div>
   );
 };
 
-export default HuffmanTreeComponent;
+// Node styling
+const nodeStyle = {
+  border: '1px solid black',
+  padding: '10px',
+  margin: '5px',
+  minWidth: '30px',
+  textAlign: 'center',
+};
+
+export default Test;
