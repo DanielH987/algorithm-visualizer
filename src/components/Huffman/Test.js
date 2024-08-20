@@ -1,16 +1,42 @@
 import React, { useState, useEffect } from "react";
+import { useDrag, useDrop } from "react-dnd";
 
 // Helper function to create a new tree node
 function createNode(value, left = null, right = null) {
   return { value, left, right };
 }
 
-const TreeNode = ({ node, onSwapLeft, onSwapRight, onAddAdjacent, index, canAdd }) => {
+const ItemTypes = {
+  NODE: "node",
+};
+
+const TreeNode = ({ node, onSwapLeft, onSwapRight, onAddAdjacent, index, canAdd, swapNodes }) => {
+  const [{ isDragging }, dragRef] = useDrag({
+    type: ItemTypes.NODE,
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [, dropRef] = useDrop({
+    accept: ItemTypes.NODE,
+    drop: (draggedItem) => {
+      if (draggedItem.index !== index) {
+        swapNodes(draggedItem.index, index);
+      }
+    },
+  });
+
   if (!node) return null;
 
   return (
-    <div style={{ textAlign: "center", margin: "10px" }}>
-      <div>{node.value}</div>
+    <div
+      ref={(node) => dragRef(dropRef(node))}
+      className="tree-node-container"
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+    >
+      <div className="tree-node">{node.value}</div>
       <div>
         <button onClick={onSwapLeft} disabled={index === 0}>
           Swap Left
@@ -22,7 +48,7 @@ const TreeNode = ({ node, onSwapLeft, onSwapRight, onAddAdjacent, index, canAdd 
       </div>
 
       {/* Render Children Below */}
-      <div style={{ display: "flex", justifyContent: "center", marginTop: "10px" }}>
+      <div className="tree-children">
         {node.left && <TreeNode node={node.left} />}
         {node.right && <TreeNode node={node.right} />}
       </div>
@@ -60,10 +86,10 @@ const Test = ({ randomNumbers }) => {
 
   return (
     <div>
-      <h2>Dynamic Tree</h2>
+      <h2>Huffman Tree</h2>
       <div style={{ display: "flex", justifyContent: "center" }}>
         {mainRow.map((node, index) => (
-          <div key={index} style={{ margin: "0 20px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <div key={index} className="tree-node-wrapper">
             <TreeNode
               node={node}
               index={index}
@@ -71,6 +97,7 @@ const Test = ({ randomNumbers }) => {
               onSwapLeft={() => index > 0 && swapNodes(index, index - 1)}
               onSwapRight={() => index < mainRow.length - 1 && swapNodes(index, index + 1)}
               onAddAdjacent={() => addNodes(index)}
+              swapNodes={swapNodes}
             />
           </div>
         ))}
