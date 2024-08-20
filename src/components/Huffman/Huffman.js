@@ -65,60 +65,63 @@ const Huffman = ({
     const isTotalBitLengthCorrect = computedTotalBitLength === parseInt(totalBitLength);
 
     return (
-        <div className="huffman-container">
-            <table className="huffman-table">
-                <tbody>
-                    {staticWords.map((word, rowIndex) => (
-                        <tr key={rowIndex}>
-                            <td>{word}</td>
-                            {[...Array(7)].map((_, colIndex) => {
-                                if (rowIndex === 0) {
-                                    return <td key={colIndex}>{randomCharacters[colIndex]}</td>;
-                                } else if (rowIndex === 1) {
-                                    return <td key={colIndex}>{randomNumbers[colIndex]}</td>;
-                                } else if (rowIndex === 2) {
-                                    return (
-                                        <td key={colIndex}>
-                                            <input
-                                                type="text"
-                                                value={encodingInputs[colIndex]}
-                                                onChange={(e) => onEncodingChange(colIndex, e.target.value)}
-                                            />
-                                        </td>
-                                    );
-                                } else if (rowIndex === 3) {
-                                    return (
-                                        <td key={colIndex}>
-                                            <input
-                                                type="text"
-                                                value={bitLengthInputs[colIndex]}
-                                                onChange={(e) => onBitLengthChange(colIndex, e.target.value)}
-                                            />
-                                        </td>
-                                    );
-                                } else {
-                                    if (colIndex === 1) {
+        <div>
+            <h3>Preparation for Quiz QHUF</h3>
+            <div className="huffman-container">
+                <table className="huffman-table">
+                    <tbody>
+                        {staticWords.map((word, rowIndex) => (
+                            <tr key={rowIndex}>
+                                <td>{word}</td>
+                                {[...Array(7)].map((_, colIndex) => {
+                                    if (rowIndex === 0) {
+                                        return <td key={colIndex}>{randomCharacters[colIndex]}</td>;
+                                    } else if (rowIndex === 1) {
+                                        return <td key={colIndex}>{randomNumbers[colIndex]}</td>;
+                                    } else if (rowIndex === 2) {
                                         return (
-                                            <td key={colIndex} colSpan={7}>
+                                            <td key={colIndex}>
                                                 <input
                                                     type="text"
-                                                    value={totalBitLength}
-                                                    onChange={(e) => onTotalBitLengthChange(e.target.value)}
+                                                    value={encodingInputs[colIndex]}
+                                                    onChange={(e) => onEncodingChange(colIndex, e.target.value)}
                                                 />
                                             </td>
                                         );
+                                    } else if (rowIndex === 3) {
+                                        return (
+                                            <td key={colIndex}>
+                                                <input
+                                                    type="text"
+                                                    value={bitLengthInputs[colIndex]}
+                                                    onChange={(e) => onBitLengthChange(colIndex, e.target.value)}
+                                                />
+                                            </td>
+                                        );
+                                    } else {
+                                        if (colIndex === 1) {
+                                            return (
+                                                <td key={colIndex} colSpan={7}>
+                                                    <input
+                                                        type="text"
+                                                        value={totalBitLength}
+                                                        onChange={(e) => onTotalBitLengthChange(e.target.value)}
+                                                    />
+                                                </td>
+                                            );
+                                        }
                                     }
-                                }
-                            })}
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            {showAnswer && (
-                <h3 className={isTotalBitLengthCorrect ? 'green-text' : 'red-text'}>
-                    {computedTotalBitLength}
-                </h3>
-            )}
+                                })}
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+                {showAnswer && (
+                    <h3 className={isTotalBitLengthCorrect ? 'green-text' : 'red-text'}>
+                        {computedTotalBitLength}
+                    </h3>
+                )}
+            </div>
         </div>
     );
 }
