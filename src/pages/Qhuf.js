@@ -91,7 +91,9 @@ const Qhuf = () => {
         randomCharacters={randomCharacters} 
         randomNumbers={randomNumbers} 
       /> */}
-      <Test />
+      <Test 
+        randomNumbers={randomNumbers}
+      />
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the QHUF Page!</h2>
