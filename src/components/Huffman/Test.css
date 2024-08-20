@@ -1,22 +1,37 @@
-.node-container,
-.history-container {
+.node-tree-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.node-row {
   display: flex;
   justify-content: center;
   margin-bottom: 20px;
 }
 
-.node,
-.parent-node,
-.child-node {
-  border: 1px solid #333;
-  padding: 10px;
-  margin: 5px;
-  background-color: #f0f0f0;
+.node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.node-tree {
+  margin: 20px 0;
+}
+
+.node-value {
+  font-weight: bold;
   text-align: center;
 }
 
-.children-nodes {
+.node-children {
   display: flex;
   justify-content: center;
   margin-top: 10px;
+}
+
+.node-child {
+  margin: 0 10px;
 }
