@@ -1,25 +1,64 @@
-.tree-builder {
-  padding: 20px;
-}
-
-.main-row, .tree-row {
+.tree-node-container {
   display: flex;
-  justify-content: center;
-  margin-bottom: 10px;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 }
 
-.node, .tree-node, .empty-node {
-  padding: 10px;
-  border: 1px solid #000;
-  margin: 0 5px;
-  min-width: 40px;
+.tree-node {
+  margin: 10px;
+  padding: 20px;
+  border: 1px solid #ccc;
   text-align: center;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-.actions {
-  margin-top: 5px;
+.tree-node:hover {
+  background-color: #f0f0f0;
 }
 
-button {
-  margin: 2px;
+.tree-node.highlight {
+  border-color: black;
+  border-width: 2px;
+}
+
+.tree-children {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.tree-children::before,
+.tree-children::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 20px;
+  border-top: 1px solid #ccc;
+}
+
+.tree-children::before {
+  left: 0;
+  border-right: 1px solid #ccc;
+}
+
+.tree-children::after {
+  right: 0;
+  border-left: 1px solid #ccc;
+}
+
+.tree-node-wrapper {
+  margin: 0 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
