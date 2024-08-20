@@ -1,110 +1,109 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useDrag, useDrop } from "react-dnd";
 
-// Component for rendering a node
-const Node = ({ value, onClick }) => {
-  return (
-    <div
-      onClick={onClick}
-      style={{
-        border: "1px solid black",
-        padding: "10px",
-        margin: "5px",
-        cursor: "pointer",
-        display: "inline-block",
-      }}
-    >
-      {value}
-    </div>
-  );
+// Helper function to create a new tree node
+function createNode(value, left = null, right = null) {
+  return { value, left, right };
+}
+
+const ItemTypes = {
+  NODE: "node",
 };
 
-// Recursive Tree Node Component
-const TreeNode = ({ node }) => {
+const TreeNode = ({ node, onSwapLeft, onSwapRight, onAddAdjacent, index, canAdd, swapNodes }) => {
+  const [{ isDragging }, dragRef] = useDrag({
+    type: ItemTypes.NODE,
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const [, dropRef] = useDrop({
+    accept: ItemTypes.NODE,
+    drop: (draggedItem) => {
+      if (draggedItem.index !== index) {
+        swapNodes(draggedItem.index, index);
+      }
+    },
+  });
+
   if (!node) return null;
 
   return (
-    <div style={{ textAlign: "center" }}>
-      <div>{node.value}</div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        {node.children &&
-          node.children.map((child, index) => (
-            <div key={index} style={{ margin: "0 10px" }}>
-              <TreeNode node={child} />
-            </div>
-          ))}
+    <div
+      ref={(node) => dragRef(dropRef(node))}
+      className="tree-node-container"
+      style={{ opacity: isDragging ? 0.5 : 1 }}
+    >
+      <div className="tree-node">{node.value}</div>
+      <div>
+        <button onClick={onSwapLeft} disabled={index === 0}>
+          Swap Left
+        </button>
+        <button onClick={onSwapRight} disabled={index === canAdd}>
+          Swap Right
+        </button>
+        {canAdd && <button onClick={onAddAdjacent}>Add Adjacent</button>}
+      </div>
+
+      {/* Render Children Below */}
+      <div className="tree-children">
+        {node.left && <TreeNode node={node.left} />}
+        {node.right && <TreeNode node={node.right} />}
       </div>
     </div>
   );
 };
 
-const HuffmanTreeComponent = () => {
-  const [mainRow, setMainRow] = useState([5, 3, 8, 2, 6, 1, 7]);
-  const [treeNodes, setTreeNodes] = useState([]);
+const Test = ({ randomNumbers }) => {
+  const [mainRow, setMainRow] = useState(randomNumbers.map((val) => createNode(val)));
 
-  // Swap nodes
+  // Sync state with updated props when randomNumbers changes
+  useEffect(() => {
+    setMainRow(randomNumbers.map((val) => createNode(val)));
+  }, [randomNumbers]);
+
   const swapNodes = (index1, index2) => {
     const newRow = [...mainRow];
     [newRow[index1], newRow[index2]] = [newRow[index2], newRow[index1]];
     setMainRow(newRow);
   };
 
-  // Combine adjacent nodes
-  const combineNodes = (index) => {
+  const addNodes = (index) => {
+    if (index < 0 || index >= mainRow.length - 1) return;
+
+    // Create a new parent node with the sum of two adjacent nodes
+    const leftNode = mainRow[index];
+    const rightNode = mainRow[index + 1];
+    const newNode = createNode(leftNode.value + rightNode.value, leftNode, rightNode);
+
+    // Update the main row
     const newRow = [...mainRow];
-    const combinedValue = newRow[index] + newRow[index + 1];
-
-    // Create parent node with children
-    const parentNode = {
-      value: combinedValue,
-      children: [
-        { value: newRow[index] },
-        { value: newRow[index + 1] },
-      ],
-    };
-
-    // Remove the two nodes and replace them with the parent node
-    newRow.splice(index, 2, combinedValue);
+    newRow.splice(index, 2, newNode); // Replace two nodes with the new parent node
     setMainRow(newRow);
-    setTreeNodes([...treeNodes, parentNode]);
   };
 
   return (
     <div>
-      <h3>Main Row</h3>
-      <div>
-        {mainRow.map((value, index) => (
-          <Node
-            key={index}
-            value={value}
-            onClick={() =>
-              index < mainRow.length - 1 ? combineNodes(index) : null
-            }
-          />
-        ))}
-      </div>
-
-      <h3>Swap Nodes</h3>
-      <div>
-        {mainRow.map((value, index) => (
-          <button
-            key={index}
-            onClick={() =>
-              index < mainRow.length - 1 ? swapNodes(index, index + 1) : null
-            }
-          >
-            Swap {value} with {mainRow[index + 1] ?? "N/A"}
-          </button>
-        ))}
-      </div>
-
-      <h3>Tree Structure</h3>
-      <div>
-        {treeNodes.map((node, index) => (
-          <TreeNode key={index} node={node} />
+      <h2>Huffman Tree</h2>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {mainRow.map((node, index) => (
+          <div key={index} className="tree-node-wrapper">
+            <TreeNode
+              node={node}
+              index={index}
+              canAdd={index < mainRow.length - 1}
+              onSwapLeft={() => index > 0 && swapNodes(index, index - 1)}
+              onSwapRight={() => index < mainRow.length - 1 && swapNodes(index, index + 1)}
+              onAddAdjacent={() => addNodes(index)}
+              swapNodes={swapNodes}
+            />
+          </div>
         ))}
       </div>
     </div>
   );
 };
 
-export default HuffmanTreeComponent;
+export default Test;
