@@ -7,10 +7,9 @@ const Qbst = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [randomNumbers, setRandomNumbers] = useState([]);
   const [showCorrectTree, setShowCorrectTree] = useState(false);
-  const [userTree, setUserTree] = useState(null); // Track user's tree
-  const [isTreeCorrect, setIsTreeCorrect] = useState(false); // Track correctness
+  const [userTree, setUserTree] = useState(null);
+  const [isTreeCorrect, setIsTreeCorrect] = useState(false);
 
-  // Function to generate an array of random integers
   const generateRandomNumbers = () => {
     const size = 7;
     const min = 1;
@@ -31,11 +30,11 @@ const Qbst = () => {
 
   const handleGenerateNew = () => {
     setRandomNumbers(generateRandomNumbers());
-    setShowCorrectTree(false); // Reset to hide the correct tree when generating new numbers
+    setShowCorrectTree(false);
   };
 
   const handleShowAnswer = () => {
-    setShowCorrectTree(!showCorrectTree); // Toggle the correct tree
+    setShowCorrectTree(!showCorrectTree);
   };
 
   const compareTrees = (userTree, correctTree) => {
@@ -48,10 +47,10 @@ const Qbst = () => {
   useEffect(() => {
     if (userTree) {
       console.log("User tree updated:", userTree);
-      const correctTree = buildCorrectTree(randomNumbers); // Build the correct tree based on random numbers
-      const isCorrect = compareTrees(userTree, correctTree); // Compare the user tree with the correct tree
+      const correctTree = buildCorrectTree(randomNumbers);
+      const isCorrect = compareTrees(userTree, correctTree);
       console.log("Is tree correct?", isCorrect);
-      setIsTreeCorrect(isCorrect); // Update the state
+      setIsTreeCorrect(isCorrect);
     }
   }, [userTree, randomNumbers]);
 
@@ -67,7 +66,7 @@ const Qbst = () => {
         <CorrectBinarySearchTree randomNumbers={randomNumbers} />
       </div>
 
-      {isTreeCorrect && <h3 className="correct">Correct!</h3>} {/* Display the message when correct */}
+      {isTreeCorrect && <h3 className="correct">Correct!</h3>}
 
       <button className='styled-button' onClick={handleGenerateNew} style={{ marginTop: '20px' }}>Generate New</button>
       <button className='styled-button' onClick={handleShowAnswer} style={{ marginTop: '20px' }}>{!showCorrectTree ? 'Show Answer' : 'Hide Answer'}</button>
