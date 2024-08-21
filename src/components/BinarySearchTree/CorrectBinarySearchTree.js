@@ -8,7 +8,7 @@ const insertIntoBST = (root, value) => {
   return root;
 };
 
-const buildCorrectTree = (randomNumbers) => {
+export const buildCorrectTree = (randomNumbers) => {
   let root = null;
   randomNumbers.forEach(num => {
     root = insertIntoBST(root, num);
