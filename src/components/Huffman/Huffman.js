@@ -66,7 +66,7 @@ const Huffman = ({
 
     return (
         <div>
-            <h3>Preparation for Quiz QHUF</h3>
+            <h2>Preparation for Quiz QHUF</h2>
             <div className="huffman-container">
                 <table className="huffman-table">
                     <tbody>
