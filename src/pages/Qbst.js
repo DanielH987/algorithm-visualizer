@@ -46,11 +46,13 @@ const Qbst = () => {
   };
 
   useEffect(() => {
-    console.log("User tree updated:", userTree);
-    const correctTree = buildCorrectTree(randomNumbers); // Build the correct tree based on random numbers
-    const isCorrect = compareTrees(userTree, correctTree); // Compare the user tree with the correct tree
-    console.log("Is tree correct?", isCorrect);
-    setIsTreeCorrect(isCorrect); // Update the state
+    if (userTree) {
+      console.log("User tree updated:", userTree);
+      const correctTree = buildCorrectTree(randomNumbers); // Build the correct tree based on random numbers
+      const isCorrect = compareTrees(userTree, correctTree); // Compare the user tree with the correct tree
+      console.log("Is tree correct?", isCorrect);
+      setIsTreeCorrect(isCorrect); // Update the state
+    }
   }, [userTree, randomNumbers]);
 
   return (
@@ -65,7 +67,7 @@ const Qbst = () => {
         <CorrectBinarySearchTree randomNumbers={randomNumbers} />
       </div>
 
-      {isTreeCorrect && <div className="correct">Correct!</div>} {/* Display the message when correct */}
+      {isTreeCorrect && <h3 className="correct">Correct!</h3>} {/* Display the message when correct */}
 
       <button className='styled-button' onClick={handleGenerateNew} style={{ marginTop: '20px' }}>Generate New</button>
       <button className='styled-button' onClick={handleShowAnswer} style={{ marginTop: '20px' }}>{!showCorrectTree ? 'Show Answer' : 'Hide Answer'}</button>
