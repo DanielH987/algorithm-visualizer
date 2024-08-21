@@ -45,11 +45,15 @@ const BSTNode = ({ value }) => {
   const [rightNode, setRightNode] = useState(null);
 
   const handleDropLeft = (item) => {
-      setLeftNode(item);
+    if (!leftNode) {
+      setLeftNode(item.value); // Only store the value of the dropped node
+    }
   };
 
   const handleDropRight = (item) => {
-      setRightNode(item);
+    if (!rightNode) {
+      setRightNode(item.value); // Only store the value of the dropped node
+    }
   };
 
   return (
@@ -57,10 +61,10 @@ const BSTNode = ({ value }) => {
       <Node value={value} />
       <div className="bst-children">
         <BSTSlot acceptNode={handleDropLeft} highlight={true}>
-          {leftNode ? <BSTNode {...leftNode} /> : 'Left Child'}
+          {leftNode ? <BSTNode value={leftNode} /> : 'Left Child'}
         </BSTSlot>
         <BSTSlot acceptNode={handleDropRight} highlight={true}>
-          {rightNode ? <BSTNode {...rightNode} /> : 'Right Child'}
+          {rightNode ? <BSTNode value={rightNode} /> : 'Right Child'}
         </BSTSlot>
       </div>
     </div>
