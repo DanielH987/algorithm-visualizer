@@ -1,6 +1,5 @@
 import React from 'react';
 
-// Helper function to insert nodes into the BST
 const insertIntoBST = (root, value) => {
   if (!root) return { value, left: null, right: null };
   if (value < root.value) root.left = insertIntoBST(root.left, value);
