@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Huffman from '../components/Huffman/Huffman';
 import HuffmanTree from '../components/Huffman/HuffmanTree';
 import Modal from '../components/Modal/Modal';
-import Test from '../components/Huffman/Test';
 
 const Qhuf = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -93,12 +92,7 @@ const Qhuf = () => {
         {!showAnswer && <button className='styled-button' onClick={toggleAnswer}>Show Answer</button>}
       </div>
 
-      {/* <HuffmanTree 
-        key={randomNumbers.join('-')}
-        randomCharacters={randomCharacters} 
-        randomNumbers={randomNumbers} 
-      /> */}
-      <Test 
+      <HuffmanTree 
         randomNumbers={randomNumbers}
         randomCharacters={randomCharacters} 
       />
