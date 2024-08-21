@@ -1,18 +1,12 @@
-.huffman-tree {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    text-align: center;
-}
-
-.huffman-tree td {
-    padding: 10px;
-    vertical-align: middle;
-    text-align: center;
-}
-
-.node {
-    margin: 0 auto;
+.tree-node-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+  
+  .tree-node {
+    margin: 10px;
     padding: 20px;
     border: 1px solid #ccc;
     text-align: center;
@@ -25,42 +19,71 @@
     justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s;
-}
-
-.node:hover {
+  }
+  
+  .tree-node:hover {
     background-color: #f0f0f0;
-}
-
-.node.highlight {
+  }
+  
+  .tree-node.highlight {
     border-color: black;
     border-width: 2px;
-}
-
-.dropdown-menu {
-    position: absolute;
-    background-color: white;
+  }
+  
+  .tree-children {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .tree-children::before {
+    left: 0;
+    border-right: 1px solid #ccc;
+  }
+  
+  .tree-children::after {
+    right: 0;
+    border-left: 1px solid #ccc;
+  }
+  
+  .tree-node-wrapper {
+    margin: 0 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .dropdown-menu {
+    background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-}
-
-.dropdown-menu ul {
-    list-style: none;
-    padding: 0;
+  }
+  
+  .dropdown-menu ul {
+    list-style-type: none;
+    padding: 10px;
     margin: 0;
-}
-
-.dropdown-menu li {
+  }
+  
+  .dropdown-menu ul li {
     padding: 8px 12px;
     cursor: pointer;
-}
-
-.dropdown-menu li:hover {
+    transition: background-color 0.2s;
+  }
+  
+  .dropdown-menu ul li:hover {
     background-color: #f0f0f0;
-}
-
-.disabled {
-    pointer-events: none;
-    color: grey;
-    cursor: not-allowed;
-}
+  }
+  
+  .dropdown-menu ul li.disabled {
+    color: #999;
+  }
+  
+  .parent-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
