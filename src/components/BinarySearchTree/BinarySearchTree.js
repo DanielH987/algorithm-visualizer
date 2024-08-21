@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
-import './BinarySearchTree.css'; // Assume basic styles here
+import './BinarySearchTree.css';
 
 const Node = ({ value }) => {
   const [{ isDragging }, drag] = useDrag({
@@ -45,7 +45,7 @@ const BSTNode = ({ value, setTree, parentTree }) => {
     if (!left) {
       setLeft(item.value);
       updateTree(parentTree, value, item.value, 'left');
-      setTree({ ...parentTree }); // Force re-render with updated tree
+      setTree({ ...parentTree });
     }
   };
 
@@ -53,7 +53,7 @@ const BSTNode = ({ value, setTree, parentTree }) => {
     if (!right) {
       setRight(item.value);
       updateTree(parentTree, value, item.value, 'right');
-      setTree({ ...parentTree }); // Force re-render with updated tree
+      setTree({ ...parentTree });
     }
   };
 
@@ -88,15 +88,15 @@ const BST = ({ randomNumbers, setUserTree }) => {
   const [treeStructure, setTreeStructure] = useState(null);
 
   useEffect(() => {
-    setRoot(null); // Reset tree when randomNumbers change
-    setUserTree(null); // Reset userTree in parent
+    setRoot(null);
+    setUserTree(null);
   }, [randomNumbers]);
 
   const handleDropRoot = (item) => {
     const newTree = { value: item.value, left: null, right: null };
     setRoot(item.value);
     setTreeStructure(newTree);
-    setUserTree(newTree); // Initialize user tree with root
+    setUserTree(newTree);
   };
 
   return (
