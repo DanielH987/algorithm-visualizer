@@ -37,19 +37,23 @@ const BSTSlot = ({ acceptNode, children, highlight }) => {
   );
 };
 
-const BSTNode = ({ value }) => {
-  const [leftNode, setLeftNode] = useState(null);
-  const [rightNode, setRightNode] = useState(null);
+const BSTNode = ({ value, setTree, parentTree }) => {
+  const [left, setLeft] = useState(null);
+  const [right, setRight] = useState(null);
 
   const handleDropLeft = (item) => {
-    if (!leftNode) {
-      setLeftNode(item.value); // Only store the value of the dropped node
+    if (!left) {
+      setLeft(item.value);
+      updateTree(parentTree, value, item.value, 'left');
+      setTree({ ...parentTree }); // Force re-render with updated tree
     }
   };
 
   const handleDropRight = (item) => {
-    if (!rightNode) {
-      setRightNode(item.value); // Only store the value of the dropped node
+    if (!right) {
+      setRight(item.value);
+      updateTree(parentTree, value, item.value, 'right');
+      setTree({ ...parentTree }); // Force re-render with updated tree
     }
   };
 
@@ -58,31 +62,47 @@ const BSTNode = ({ value }) => {
       <Node value={value} />
       <div className="bst-children">
         <BSTSlot acceptNode={handleDropLeft} highlight={true}>
-          {leftNode ? <BSTNode value={leftNode} /> : 'Left Child'}
+          {left ? <BSTNode value={left} setTree={setTree} parentTree={parentTree} /> : 'Left Child'}
         </BSTSlot>
         <BSTSlot acceptNode={handleDropRight} highlight={true}>
-          {rightNode ? <BSTNode value={rightNode} /> : 'Right Child'}
+          {right ? <BSTNode value={right} setTree={setTree} parentTree={parentTree} /> : 'Right Child'}
         </BSTSlot>
       </div>
     </div>
   );
 };
 
-const BST = ({ randomNumbers }) => {
+const updateTree = (tree, parentValue, childValue, direction) => {
+  if (!tree) return { value: parentValue, left: null, right: null };
+  if (tree.value === parentValue) {
+    if (direction === 'left') tree.left = { value: childValue, left: null, right: null };
+    if (direction === 'right') tree.right = { value: childValue, left: null, right: null };
+  } else {
+    if (tree.left) updateTree(tree.left, parentValue, childValue, direction);
+    if (tree.right) updateTree(tree.right, parentValue, childValue, direction);
+  }
+};
+
+const BST = ({ randomNumbers, setUserTree }) => {
   const [root, setRoot] = useState(null);
+  const [treeStructure, setTreeStructure] = useState(null);
 
   useEffect(() => {
     setRoot(null); // Reset tree when randomNumbers change
+    setUserTree(null); // Reset userTree in parent
   }, [randomNumbers]);
 
   const handleDropRoot = (item) => {
-    setRoot(item);
+    const newTree = { value: item.value, left: null, right: null };
+    setRoot(item.value);
+    setTreeStructure(newTree);
+    setUserTree(newTree); // Initialize user tree with root
   };
 
   return (
     <div className="bst-container">
       {root ? (
-        <BSTNode {...root} />
+        <BSTNode value={root} setTree={setUserTree} parentTree={treeStructure} />
       ) : (
         <BSTSlot acceptNode={handleDropRoot} highlight={true}>
           Place Root Node
@@ -102,11 +122,11 @@ const NodePool = ({ nodes }) => {
   );
 };
 
-const BinarySearchTree = ({ randomNumbers }) => {
+const BinarySearchTree = ({ randomNumbers, setUserTree }) => {
   return (
     <div>
       <NodePool nodes={randomNumbers} />
-      <BST randomNumbers={randomNumbers} />
+      <BST randomNumbers={randomNumbers} setUserTree={setUserTree} />
     </div>
   );
 };
