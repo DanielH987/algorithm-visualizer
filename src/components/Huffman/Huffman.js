@@ -116,8 +116,11 @@ const Huffman = ({
                         ))}
                     </tbody>
                 </table>
+                <h3 className="correct" style={{ marginBottom: '5px' }}>
+                    <strong>{isTotalBitLengthCorrect ? 'Correct!' : ''}</strong>
+                </h3>
                 {showAnswer && (
-                    <h3 className={isTotalBitLengthCorrect ? 'green-text' : 'red-text'}>
+                    <h3 className={isTotalBitLengthCorrect ? 'green-text' : 'red-text'} style={{ marginTop: '5px' }}>
                         {computedTotalBitLength}
                     </h3>
                 )}
