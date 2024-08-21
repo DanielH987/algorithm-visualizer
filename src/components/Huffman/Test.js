@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import "./Test.css";
 
-function createNode(value, left = null, right = null) {
-  return { value, left, right };
+function createNode(value, character, left = null, right = null) {
+  return { value, character, left, right };
 }
 
 const ItemTypes = {
@@ -42,7 +42,7 @@ const TreeNode = ({ node, onDrop, index, isRootNode }) => {
       className="tree-node-container"
     >
       <div className={`tree-node ${isOver ? "highlight" : ""}`}>{node.value}</div>
-
+      <div className="tree-character">{node.character}</div>
       <div className="tree-children">
         {node.left && <TreeNode node={node.left} isRootNode={false} />}
         {node.right && <TreeNode node={node.right} isRootNode={false} />}
@@ -51,16 +51,20 @@ const TreeNode = ({ node, onDrop, index, isRootNode }) => {
   );
 };
 
-const Test = ({ randomNumbers }) => {
-  const [mainRow, setMainRow] = useState(randomNumbers.map((val) => createNode(val)));
+const Test = ({ randomNumbers, randomCharacters }) => {
+  const [mainRow, setMainRow] = useState(
+    randomNumbers.map((val, index) => createNode(val, randomCharacters[index]))
+  );
   const [history, setHistory] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [pendingMove, setPendingMove] = useState({ fromColIndex: null, toColIndex: null });
 
   useEffect(() => {
-    setMainRow(randomNumbers.map((val) => createNode(val)));
-  }, [randomNumbers]);
+    setMainRow(
+      randomNumbers.map((val, index) => createNode(val, randomCharacters[index]))
+    );
+  }, [randomNumbers, randomCharacters]);
 
   const swapNodes = (index1, index2) => {
     setHistory([...history, mainRow]);
@@ -78,7 +82,12 @@ const Test = ({ randomNumbers }) => {
     const leftNode = node1.value < node2.value ? node1 : node2;
     const rightNode = node1.value < node2.value ? node2 : node1;
 
-    const newNode = createNode(leftNode.value + rightNode.value, leftNode, rightNode);
+    const newNode = createNode(
+      leftNode.value + rightNode.value,
+      '', // New node doesn't need a character
+      leftNode,
+      rightNode
+    );
 
     setHistory([...history, mainRow]);
     const newRow = [...mainRow];
