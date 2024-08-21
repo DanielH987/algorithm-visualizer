@@ -15,7 +15,7 @@ const Qhuf = () => {
   };
 
   const minRange = 1;
-  const maxRange = 100;
+  const maxRange = 50;
 
   function generateUniqueRandomCharacters() {
     const charactersSet = new Set();
