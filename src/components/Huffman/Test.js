@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import "./Test.css";
 
-// Helper function to create a new tree node
 function createNode(value, left = null, right = null) {
   return { value, left, right };
 }
@@ -11,42 +11,40 @@ const ItemTypes = {
 };
 
 const TreeNode = ({ node, onDrop, index, isRootNode }) => {
-  // Only make root nodes draggable and droppable
   const [{ isDragging }, dragRef] = useDrag({
     type: ItemTypes.NODE,
     item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
-    canDrag: isRootNode, // Only draggable if it's a root node
+    canDrag: isRootNode,
   });
 
   const [{ isOver }, dropRef] = useDrop({
     accept: ItemTypes.NODE,
     drop: (draggedItem, monitor) => {
       if (draggedItem.index !== index && isRootNode) {
-        const dropPosition = monitor.getClientOffset(); // Get the position where the node was dropped
+        const dropPosition = monitor.getClientOffset();
         onDrop(draggedItem.index, index, dropPosition);
       }
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
     }),
-    canDrop: () => isRootNode, // Only droppable if it's a root node
+    canDrop: () => isRootNode,
   });
 
   if (!node) return null;
 
   return (
     <div
-      ref={(node) => isRootNode && dragRef(dropRef(node))} // Attach refs only to root nodes
+      ref={(node) => isRootNode && dragRef(dropRef(node))}
       className="tree-node-container"
     >
       <div className={`tree-node ${isOver ? "highlight" : ""}`}>{node.value}</div>
 
-      {/* Render Children Below */}
       <div className="tree-children">
-        {node.left && <TreeNode node={node.left} isRootNode={false} />} {/* Children are not root nodes */}
+        {node.left && <TreeNode node={node.left} isRootNode={false} />}
         {node.right && <TreeNode node={node.right} isRootNode={false} />}
       </div>
     </div>
@@ -59,7 +57,6 @@ const Test = ({ randomNumbers }) => {
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [pendingMove, setPendingMove] = useState({ fromColIndex: null, toColIndex: null });
 
-  // Sync state with updated props when randomNumbers changes
   useEffect(() => {
     setMainRow([1,2,3,4,5,6,7].map((val) => createNode(val)));
   }, [randomNumbers]);
@@ -76,20 +73,18 @@ const Test = ({ randomNumbers }) => {
     const node1 = mainRow[fromIndex];
     const node2 = mainRow[toIndex];
   
-    // Ensure the smaller node is on the left and the larger node is on the right
     const leftNode = node1.value < node2.value ? node1 : node2;
     const rightNode = node1.value < node2.value ? node2 : node1;
   
     const newNode = createNode(leftNode.value + rightNode.value, leftNode, rightNode);
   
     const newRow = [...mainRow];
-    // Remove the original nodes and replace with the new combined node
     newRow.splice(Math.min(fromIndex, toIndex), 2, newNode);
     setMainRow(newRow);
   };
 
   const handleDrop = (fromIndex, toIndex, position) => {
-    setDropdownPosition({ top: position.y, left: position.x }); // Set the dropdown position to where the node was dropped
+    setDropdownPosition({ top: position.y, left: position.x });
     setPendingMove({ fromColIndex: fromIndex, toColIndex: toIndex });
     setShowDropdown(true);
   };
@@ -99,7 +94,7 @@ const Test = ({ randomNumbers }) => {
     if (option === "Swap Nodes") {
       swapNodes(fromColIndex, toColIndex);
     } else if (option === "Add Nodes" && areNodesAdjacent(fromColIndex, toColIndex)) {
-      addNodes(fromColIndex, toColIndex); // Use both indices to add nodes
+      addNodes(fromColIndex, toColIndex);
     }
     setShowDropdown(false);
   };
@@ -110,7 +105,6 @@ const Test = ({ randomNumbers }) => {
 
   const dropdownRef = useRef(null);
 
-  // Add event listener to detect clicks outside of the dropdown
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -139,8 +133,8 @@ const Test = ({ randomNumbers }) => {
             <TreeNode
               node={node}
               index={index}
-              onDrop={handleDrop} // Pass the drop handler to TreeNode
-              isRootNode={true} // Root nodes are draggable and droppable
+              onDrop={handleDrop}
+              isRootNode={true}
             />
           </div>
         ))}
@@ -161,7 +155,6 @@ const Test = ({ randomNumbers }) => {
             <li
               onClick={() => handleOptionSelect("Add Nodes")}
               className={!nodesAreAdjacent ? "disabled" : ""}
-              style={{ pointerEvents: !nodesAreAdjacent ? "none" : "auto", opacity: !nodesAreAdjacent ? 0.5 : 1 }}
             >
               Add Nodes
             </li>
