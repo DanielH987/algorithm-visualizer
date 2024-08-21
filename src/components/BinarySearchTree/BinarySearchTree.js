@@ -1,126 +1,115 @@
 import React, { useState } from 'react';
-import { useDrag, useDrop, DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import { useDrag, useDrop } from 'react-dnd';
+import './BinarySearchTree.css'; // Assume basic styles here
 
-const NODE_TYPE = 'node';
-
+// Node component representing a draggable node
 const Node = ({ value }) => {
-  const [{ isDragging }, drag] = useDrag(() => ({
-    type: NODE_TYPE,
+  const [{ isDragging }, drag] = useDrag({
+    type: 'NODE',
     item: { value },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
-  }));
+  });
 
   return (
-    <div
-      ref={drag}
-      style={{
-        padding: '10px',
-        border: '1px solid black',
-        borderRadius: '50%',
-        width: '50px',
-        height: '50px',
-        backgroundColor: isDragging ? 'lightgreen' : 'white',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        cursor: 'move',
-      }}
-    >
+    <div ref={drag} className={`node ${isDragging ? 'dragging' : ''}`}>
       {value}
     </div>
   );
 };
 
-const TreeNode = ({ node, onDropNode }) => {
-  const [{ isOver }, drop] = useDrop(() => ({
-    accept: NODE_TYPE,
-    drop: (item) => onDropNode(node, item.value),
+// Drop slot for placing nodes in the tree
+const BSTSlot = ({ acceptNode, children, highlight }) => {
+  const [{ isOver }, drop] = useDrop({
+    accept: 'NODE',
+    drop: (item) => acceptNode(item),
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
-  }));
+  });
 
   return (
     <div
       ref={drop}
-      style={{
-        padding: '10px',
-        border: '1px solid black',
-        borderRadius: '50%',
-        width: '50px',
-        height: '50px',
-        backgroundColor: isOver ? 'lightblue' : 'white',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        margin: '10px',
-      }}
+      className={`bst-slot ${highlight && isOver ? 'highlight' : ''}`}
     >
-      {node.value ?? 'Drop here'}
+      {children}
     </div>
   );
 };
 
+// Recursively renders the Binary Search Tree nodes
+const BSTNode = ({ value }) => {
+  const [leftNode, setLeftNode] = useState(null);
+  const [rightNode, setRightNode] = useState(null);
+
+  const handleDropLeft = (item) => {
+      setLeftNode(item);
+  };
+
+  const handleDropRight = (item) => {
+      setRightNode(item);
+  };
+
+  return (
+    <div className="bst-node">
+      <Node value={value} />
+      <div className="bst-children">
+        <BSTSlot acceptNode={handleDropLeft} highlight={true}>
+          {leftNode ? <BSTNode {...leftNode} /> : 'Left Child'}
+        </BSTSlot>
+        <BSTSlot acceptNode={handleDropRight} highlight={true}>
+          {rightNode ? <BSTNode {...rightNode} /> : 'Right Child'}
+        </BSTSlot>
+      </div>
+    </div>
+  );
+};
+
+// The root Binary Search Tree component
+const BST = () => {
+  const [root, setRoot] = useState(null);
+
+  const handleDropRoot = (item) => {
+    setRoot(item);
+  };
+
+  return (
+    <div className="bst-container">
+      {root ? (
+        <BSTNode {...root} />
+      ) : (
+        <BSTSlot acceptNode={handleDropRoot} highlight={true}>
+          Place Root Node
+        </BSTSlot>
+      )}
+    </div>
+  );
+};
+
+// Pool of nodes at the top of the screen
+const NodePool = ({ nodes }) => {
+  return (
+    <div className="node-pool">
+      {nodes.map((value, index) => (
+        <Node key={index} value={value} />
+      ))}
+    </div>
+  );
+};
+
+// Main application component
 const BinarySearchTree = () => {
-  const [tree, setTree] = useState({});
-  const nodes = [5, 3, 8, 1, 4, 7, 10];
-
-  const handleDropNode = (parentNode, value) => {
-    const newTree = { ...tree };
-    if (!parentNode.value) {
-      // Root node
-      newTree.value = value;
-    } else if (value < parentNode.value) {
-      if (!parentNode.left) {
-        parentNode.left = { value };
-      } else {
-        alert('This position is already occupied!');
-      }
-    } else if (value > parentNode.value) {
-      if (!parentNode.right) {
-        parentNode.right = { value };
-      } else {
-        alert('This position is already occupied!');
-      }
-    }
-    setTree(newTree);
-  };
-
-  const renderTree = (node) => {
-    if (!node) return null;
-    return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <TreeNode node={node} onDropNode={handleDropNode} />
-        <div style={{ display: 'flex', justifyContent: 'space-around', width: '150px' }}>
-          {renderTree(node.left)}
-          {renderTree(node.right)}
-        </div>
-      </div>
-    );
-  };
+  const nodeArray = [50, 30, 70, 20, 40, 60, 80]; // Example node values
 
   return (
-    <div>
-      <h2>Binary Search Tree</h2>
-      <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-        {nodes.map((value) => (
-          <Node key={value} value={value} />
-        ))}
+      <div className="app">
+        <h2>Preparation for Quiz QHUF</h2>
+        <NodePool nodes={nodeArray} />
+        <BST />
       </div>
-      <div>{renderTree(tree)}</div>
-    </div>
   );
 };
 
-const App = () => {
-  return (
-    <DndProvider backend={HTML5Backend}>
-      <BinarySearchTree />
-    </DndProvider>
-  );
-};
-
-export default App;
+export default BinarySearchTree;
