@@ -49,5 +49,5 @@
 }
 
 .correct-tree .bst-node {
-  pointer-events: none; /* Disable interactions */
+  pointer-events: none;
 }
