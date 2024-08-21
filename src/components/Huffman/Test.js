@@ -52,16 +52,18 @@ const TreeNode = ({ node, onDrop, index, isRootNode }) => {
 };
 
 const Test = ({ randomNumbers }) => {
-  const [mainRow, setMainRow] = useState([1,2,3,4,5,6,7].map((val) => createNode(val)));
+  const [mainRow, setMainRow] = useState(randomNumbers.map((val) => createNode(val)));
+  const [history, setHistory] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
   const [pendingMove, setPendingMove] = useState({ fromColIndex: null, toColIndex: null });
 
   useEffect(() => {
-    setMainRow([1,2,3,4,5,6,7].map((val) => createNode(val)));
+    setMainRow(randomNumbers.map((val) => createNode(val)));
   }, [randomNumbers]);
 
   const swapNodes = (index1, index2) => {
+    setHistory([...history, mainRow]);
     const newRow = [...mainRow];
     [newRow[index1], newRow[index2]] = [newRow[index2], newRow[index1]];
     setMainRow(newRow);
@@ -69,15 +71,16 @@ const Test = ({ randomNumbers }) => {
 
   const addNodes = (fromIndex, toIndex) => {
     if (fromIndex === null || toIndex === null) return;
-  
+
     const node1 = mainRow[fromIndex];
     const node2 = mainRow[toIndex];
-  
+
     const leftNode = node1.value < node2.value ? node1 : node2;
     const rightNode = node1.value < node2.value ? node2 : node1;
-  
+
     const newNode = createNode(leftNode.value + rightNode.value, leftNode, rightNode);
-  
+
+    setHistory([...history, mainRow]);
     const newRow = [...mainRow];
     newRow.splice(Math.min(fromIndex, toIndex), 2, newNode);
     setMainRow(newRow);
@@ -86,15 +89,15 @@ const Test = ({ randomNumbers }) => {
   const handleDrop = (fromIndex, toIndex, position) => {
     const dropNodeElement = document.querySelectorAll(".tree-node-wrapper")[toIndex];
     const nodeRect = dropNodeElement.getBoundingClientRect();
-  
+
     setDropdownPosition({
       top: nodeRect.top + window.scrollY,
       left: nodeRect.left + window.scrollX,
     });
-  
+
     setPendingMove({ fromColIndex: fromIndex, toColIndex: toIndex });
     setShowDropdown(true);
-  };  
+  };
 
   const handleOptionSelect = (option) => {
     const { fromColIndex, toColIndex } = pendingMove;
@@ -108,6 +111,14 @@ const Test = ({ randomNumbers }) => {
 
   const areNodesAdjacent = (index1, index2) => {
     return Math.abs(index1 - index2) === 1;
+  };
+
+  const undoAction = () => {
+    if (history.length > 0) {
+      const previousState = history[history.length - 1];
+      setMainRow(previousState);
+      setHistory(history.slice(0, -1));
+    }
   };
 
   const dropdownRef = useRef(null);
@@ -168,6 +179,12 @@ const Test = ({ randomNumbers }) => {
           </ul>
         </div>
       )}
+
+      <div className="parent-container">
+        <button onClick={undoAction} disabled={history.length === 0} className="styled-button">
+          Undo
+        </button>
+      </div>
     </div>
   );
 };
