@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import './BinarySearchTree.css'; // Assume basic styles here
 
-// Node component representing a draggable node
 const Node = ({ value }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'NODE',
@@ -19,7 +18,6 @@ const Node = ({ value }) => {
   );
 };
 
-// Drop slot for placing nodes in the tree
 const BSTSlot = ({ acceptNode, children, highlight }) => {
   const [{ isOver }, drop] = useDrop({
     accept: 'NODE',
@@ -39,7 +37,6 @@ const BSTSlot = ({ acceptNode, children, highlight }) => {
   );
 };
 
-// Recursively renders the Binary Search Tree nodes
 const BSTNode = ({ value }) => {
   const [leftNode, setLeftNode] = useState(null);
   const [rightNode, setRightNode] = useState(null);
@@ -71,9 +68,12 @@ const BSTNode = ({ value }) => {
   );
 };
 
-// The root Binary Search Tree component
-const BST = () => {
+const BST = ({ randomNumbers }) => {
   const [root, setRoot] = useState(null);
+
+  useEffect(() => {
+    setRoot(null); // Reset tree when randomNumbers change
+  }, [randomNumbers]);
 
   const handleDropRoot = (item) => {
     setRoot(item);
@@ -92,7 +92,6 @@ const BST = () => {
   );
 };
 
-// Pool of nodes at the top of the screen
 const NodePool = ({ nodes }) => {
   return (
     <div className="node-pool">
@@ -103,16 +102,12 @@ const NodePool = ({ nodes }) => {
   );
 };
 
-// Main application component
-const BinarySearchTree = () => {
-  const nodeArray = [50, 30, 70, 20, 40, 60, 80]; // Example node values
-
+const BinarySearchTree = ({ randomNumbers }) => {
   return (
-      <div className="app">
-        <h2>Preparation for Quiz QHUF</h2>
-        <NodePool nodes={nodeArray} />
-        <BST />
-      </div>
+    <div>
+      <NodePool nodes={randomNumbers} />
+      <BST randomNumbers={randomNumbers} />
+    </div>
   );
 };
 
