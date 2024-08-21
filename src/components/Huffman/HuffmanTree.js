@@ -1,199 +1,201 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { useDrag, useDrop } from 'react-dnd';
-import './HuffmanTree.css';
+import React, { useState, useEffect, useRef } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import "./HuffmanTree.css";
 
-const Node = ({ number, rowIndex, colIndex, onNodeDrop, isDraggable }) => {
-    const [isHovered, setIsHovered] = useState(false);
+function createNode(value, character, left = null, right = null) {
+  return { value, character, left, right };
+}
 
-    const [, drag] = useDrag(() => ({
-        type: 'node',
-        item: { rowIndex, colIndex },
-        canDrag: isDraggable,
-        collect: (monitor) => ({
-            isDragging: monitor.isDragging(),
-        }),
-    }));
-
-    const [, drop] = useDrop(() => ({
-        accept: 'node',
-        hover: () => {
-            setIsHovered(true);
-        },
-        drop: (draggedItem, monitor) => {
-            setIsHovered(false);
-            if (draggedItem.colIndex !== colIndex) {
-                const event = monitor.getClientOffset();
-                onNodeDrop(draggedItem.colIndex, colIndex, event);
-            }
-        },
-        collect: (monitor) => {
-            if (!monitor.isOver()) {
-                setIsHovered(false);
-            }
-        }
-    }));
-
-    if (number === null) {
-        return <div className="node empty-node"></div>;
-    }
-
-    return (
-        <div
-            ref={isDraggable ? (node) => drag(drop(node)) : null}
-            className={`node ${isHovered ? 'highlight' : ''}`}
-        >
-            {number}
-        </div>
-    );
+const ItemTypes = {
+  NODE: "node",
 };
 
-const HuffmanTree = ({ randomNumbers }) => {
-    const [numbers, setNumbers] = useState([randomNumbers]);
-    const [colspans, setColspans] = useState([Array(randomNumbers.length).fill(1)]);
-    const [dropdownPosition, setDropdownPosition] = useState(null);
-    const [showDropdown, setShowDropdown] = useState(false);
-    const [pendingMove, setPendingMove] = useState(null);
-    const [history, setHistory] = useState([]);
-    const dropdownRef = useRef(null);
+const TreeNode = ({ node, onDrop, index, isRootNode }) => {
+  const [{ isDragging }, dragRef] = useDrag({
+    type: ItemTypes.NODE,
+    item: { index },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+    canDrag: isRootNode,
+  });
 
-    const moveNode = (fromColIndex, toColIndex, shouldAddNodes = false) => {
-        setNumbers((prevNumbers) => {
-            const updatedNumbers = [...prevNumbers];
-            const updatedColspans = [...colspans];
-    
-            if (shouldAddNodes) {
-                const sum = updatedNumbers[0][fromColIndex] + updatedNumbers[0][toColIndex];
-    
-                updatedNumbers[0][fromColIndex] = sum;
-                updatedNumbers[0][toColIndex] = null;
-    
-                updatedColspans[0][fromColIndex] += updatedColspans[0][toColIndex];
-                updatedColspans[0][toColIndex] = 0;
-    
-            } else {
-                const temp = updatedNumbers[0][fromColIndex];
-                updatedNumbers[0][fromColIndex] = updatedNumbers[0][toColIndex];
-                updatedNumbers[0][toColIndex] = temp;
-    
-                const tempSpan = updatedColspans[0][fromColIndex];
-                updatedColspans[0][fromColIndex] = updatedColspans[0][toColIndex];
-                updatedColspans[0][toColIndex] = tempSpan;
-            }
-    
-            setColspans(updatedColspans);
-            return updatedNumbers;
-        });
-    };
-    
-    const handleNodeDrop = (fromColIndex, toColIndex, event) => {
-        setPendingMove({ fromColIndex, toColIndex });
+  const [{ isOver }, dropRef] = useDrop({
+    accept: ItemTypes.NODE,
+    drop: (draggedItem, monitor) => {
+      if (draggedItem.index !== index && isRootNode) {
+        const dropPosition = monitor.getClientOffset();
+        onDrop(draggedItem.index, index, dropPosition);
+      }
+    },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+    canDrop: () => isRootNode,
+  });
 
-        const mouseX = event.x;
-        const mouseY = event.y;
+  if (!node) return null;
 
-        setDropdownPosition({ top: mouseY, left: mouseX });
-        setShowDropdown(true);
-    };
+  return (
+    <div
+      ref={(node) => isRootNode && dragRef(dropRef(node))}
+      className="tree-node-container"
+    >
+      <div className={`tree-node ${isOver ? "highlight" : ""}`}>{node.value}</div>
+      <div className="tree-character">{node.character}</div>
+      <div className="tree-children">
+        {node.left && <TreeNode node={node.left} isRootNode={false} />}
+        {node.right && <TreeNode node={node.right} isRootNode={false} />}
+      </div>
+    </div>
+  );
+};
 
-    const areNodesAdjacent = (index1, index2) => {
-        const minIndex = Math.min(index1, index2);
-        const maxIndex = Math.max(index1, index2);
+const HuffmanTree = ({ randomNumbers, randomCharacters }) => {
+  const [mainRow, setMainRow] = useState(
+    randomNumbers.map((val, index) => createNode(val, randomCharacters[index]))
+  );
+  const [history, setHistory] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [pendingMove, setPendingMove] = useState({ fromColIndex: null, toColIndex: null });
 
-        for (let i = minIndex + 1; i < maxIndex; i++) {
-            if (numbers[0][i] !== null) {
-                return false;
-            }
-        }
-
-        return true;
-    };
-
-    const handleOptionSelect = (option) => {
-        if (pendingMove) {
-            if (option === 'Swap Nodes') {
-                moveNode(pendingMove.fromColIndex, pendingMove.toColIndex);
-            } else if (option === 'Add Nodes') {
-                if (areNodesAdjacent(pendingMove.fromColIndex, pendingMove.toColIndex)) {
-                    moveNode(pendingMove.fromColIndex, pendingMove.toColIndex, true);
-                } else {
-                    console.log('Nodes are not adjacent. Add Nodes operation is not allowed.');
-                }
-            }
-        }
-        setPendingMove(null);
-        setShowDropdown(false);
-    };
-    
-    const revertLastAction = () => {
-        if (history.length > 0) {
-            const lastState = history.pop();
-            setNumbers(lastState.numbers);
-            setColspans(lastState.colspans);
-            setHistory([...history]);
-        }
-    };
-
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setShowDropdown(false);
-            }
-        };
-
-        if (showDropdown) {
-            document.addEventListener('mousedown', handleClickOutside);
-        } else {
-            document.removeEventListener('mousedown', handleClickOutside);
-        }
-
-        return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
-        };
-    }, [showDropdown]);
-
-    return (
-        <div>
-            <table className="huffman-tree">
-                <tbody>
-                    {numbers.map((row, rowIndex) => (
-                        <tr key={rowIndex}>
-                            {row.map((number, colIndex) => {
-                                if (number === null) return null;
-
-                                return (
-                                    <td key={colIndex} colSpan={colspans[rowIndex][colIndex]}>
-                                        <Node
-                                            rowIndex={rowIndex}
-                                            colIndex={colIndex}
-                                            number={number}
-                                            onNodeDrop={handleNodeDrop}
-                                            isDraggable={rowIndex === 0}
-                                        />
-                                    </td>
-                                );
-                            })}
-                        </tr>
-                    ))}
-                </tbody>
-                {showDropdown && (
-                    <div ref={dropdownRef} className="dropdown-menu" style={{ top: dropdownPosition.top, left: dropdownPosition.left }}>
-                        <ul>
-                            <li onClick={() => handleOptionSelect('Swap Nodes')}>Swap Nodes</li>
-                            <li 
-                                onClick={() => areNodesAdjacent(pendingMove.fromColIndex, pendingMove.toColIndex) ? handleOptionSelect('Add Nodes') : null}
-                                className={!areNodesAdjacent(pendingMove.fromColIndex, pendingMove.toColIndex) ? 'disabled' : ''}
-                            >
-                                Add Nodes
-                            </li>
-                        </ul>
-                    </div>
-                )}
-            </table>
-            <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <button className='styled-button' onClick={revertLastAction} disabled={history.length === 0}>Undo</button>
-            </div>
-        </div>
+  useEffect(() => {
+    setMainRow(
+      randomNumbers.map((val, index) => createNode(val, randomCharacters[index]))
     );
+  }, [randomNumbers, randomCharacters]);
+
+  const swapNodes = (index1, index2) => {
+    setHistory([...history, mainRow]);
+    const newRow = [...mainRow];
+    [newRow[index1], newRow[index2]] = [newRow[index2], newRow[index1]];
+    setMainRow(newRow);
+  };
+
+  const addNodes = (fromIndex, toIndex) => {
+    if (fromIndex === null || toIndex === null) return;
+
+    const node1 = mainRow[fromIndex];
+    const node2 = mainRow[toIndex];
+
+    const leftNode = node1.value < node2.value ? node1 : node2;
+    const rightNode = node1.value < node2.value ? node2 : node1;
+
+    const newNode = createNode(
+      leftNode.value + rightNode.value,
+      '',
+      leftNode,
+      rightNode
+    );
+
+    setHistory([...history, mainRow]);
+    const newRow = [...mainRow];
+    newRow.splice(Math.min(fromIndex, toIndex), 2, newNode);
+    setMainRow(newRow);
+  };
+
+  const handleDrop = (fromIndex, toIndex, position) => {
+    const dropNodeElement = document.querySelectorAll(".tree-node-wrapper")[toIndex];
+    const nodeRect = dropNodeElement.getBoundingClientRect();
+
+    setDropdownPosition({
+      top: nodeRect.top + window.scrollY,
+      left: nodeRect.left + window.scrollX,
+    });
+
+    setPendingMove({ fromColIndex: fromIndex, toColIndex: toIndex });
+    setShowDropdown(true);
+  };
+
+  const handleOptionSelect = (option) => {
+    const { fromColIndex, toColIndex } = pendingMove;
+    if (option === "Swap Nodes") {
+      swapNodes(fromColIndex, toColIndex);
+    } else if (option === "Add Nodes" && areNodesAdjacent(fromColIndex, toColIndex)) {
+      addNodes(fromColIndex, toColIndex);
+    }
+    setShowDropdown(false);
+  };
+
+  const areNodesAdjacent = (index1, index2) => {
+    return Math.abs(index1 - index2) === 1;
+  };
+
+  const undoAction = () => {
+    if (history.length > 0) {
+      const previousState = history[history.length - 1];
+      setMainRow(previousState);
+      setHistory(history.slice(0, -1));
+    }
+  };
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  const { fromColIndex, toColIndex } = pendingMove;
+  const nodesAreAdjacent = fromColIndex !== null && toColIndex !== null && areNodesAdjacent(fromColIndex, toColIndex);
+
+  return (
+    <div>
+      <h2>Huffman Tree</h2>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        {mainRow.map((node, index) => (
+          <div key={index} className="tree-node-wrapper">
+            <TreeNode
+              node={node}
+              index={index}
+              onDrop={handleDrop}
+              isRootNode={true}
+            />
+          </div>
+        ))}
+      </div>
+
+      {showDropdown && (
+        <div
+          ref={dropdownRef}
+          className="dropdown-menu"
+          style={{
+            position: "absolute",
+            top: `${dropdownPosition.top}px`,
+            left: `${dropdownPosition.left}px`,
+          }}
+        >
+          <ul>
+            <li onClick={() => handleOptionSelect("Swap Nodes")}>Swap Nodes</li>
+            <li
+              onClick={() => handleOptionSelect("Add Nodes")}
+              className={!nodesAreAdjacent ? "disabled" : ""}
+            >
+              Add Nodes
+            </li>
+          </ul>
+        </div>
+      )}
+
+      <div className="parent-container">
+        <button onClick={undoAction} disabled={history.length === 0} className="styled-button">
+          Undo
+        </button>
+      </div>
+    </div>
+  );
 };
 
 export default HuffmanTree;
