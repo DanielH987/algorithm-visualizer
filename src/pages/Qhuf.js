@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Huffman from '../components/Huffman/Huffman';
 import HuffmanTree from '../components/Huffman/HuffmanTree';
 import Modal from '../components/Modal/Modal';
-import Test from '../components/Huffman/Test';
 
 const Qhuf = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,15 +17,22 @@ const Qhuf = () => {
   const minRange = 1;
   const maxRange = 100;
 
-  function generateRandomCharacters() {
-    return Array.from({ length: 7 }, () => String.fromCharCode(Math.floor(Math.random() * 26) + 65));
+  function generateUniqueRandomCharacters() {
+    const charactersSet = new Set();
+    
+    while (charactersSet.size < 7) {
+      const randomChar = String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+      charactersSet.add(randomChar);
+    }
+  
+    return Array.from(charactersSet);
   }
 
   function generateRandomNumbers() {
     return Array.from({ length: 7 }, () => Math.floor(Math.random() * (maxRange - minRange + 1)) + minRange);
   }
 
-  const [randomCharacters, setRandomCharacters] = useState(generateRandomCharacters());
+  const [randomCharacters, setRandomCharacters] = useState(generateUniqueRandomCharacters());
   const [randomNumbers, setRandomNumbers] = useState(generateRandomNumbers());
   const [encodingInputs, setEncodingInputs] = useState(Array(7).fill(''));
   const [bitLengthInputs, setBitLengthInputs] = useState(Array(7).fill(''));
@@ -34,7 +40,7 @@ const Qhuf = () => {
   const [showAnswer, setShowAnswer] = useState(false);
 
   const regenerate = () => {
-    setRandomCharacters(generateRandomCharacters());
+    setRandomCharacters(generateUniqueRandomCharacters());
     setRandomNumbers(generateRandomNumbers());
     setEncodingInputs(Array(7).fill(''));
     setBitLengthInputs(Array(7).fill(''));
@@ -86,13 +92,9 @@ const Qhuf = () => {
         {!showAnswer && <button className='styled-button' onClick={toggleAnswer}>Show Answer</button>}
       </div>
 
-      {/* <HuffmanTree 
-        key={randomNumbers.join('-')}
-        randomCharacters={randomCharacters} 
-        randomNumbers={randomNumbers} 
-      /> */}
-      <Test 
+      <HuffmanTree 
         randomNumbers={randomNumbers}
+        randomCharacters={randomCharacters} 
       />
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
