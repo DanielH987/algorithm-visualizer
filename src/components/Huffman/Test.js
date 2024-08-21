@@ -72,12 +72,16 @@ const Test = ({ randomNumbers }) => {
 
   const addNodes = (fromIndex, toIndex) => {
     if (fromIndex === null || toIndex === null) return;
-
+  
     const node1 = mainRow[fromIndex];
     const node2 = mainRow[toIndex];
-
-    const newNode = createNode(node1.value + node2.value, node1, node2);
-
+  
+    // Ensure the smaller node is on the left and the larger node is on the right
+    const leftNode = node1.value < node2.value ? node1 : node2;
+    const rightNode = node1.value < node2.value ? node2 : node1;
+  
+    const newNode = createNode(leftNode.value + rightNode.value, leftNode, rightNode);
+  
     const newRow = [...mainRow];
     // Remove the original nodes and replace with the new combined node
     newRow.splice(Math.min(fromIndex, toIndex), 2, newNode);
