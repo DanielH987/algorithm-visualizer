@@ -1,0 +1,54 @@
+.app {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.node {
+  padding: 10px;
+  border: 1px solid #333;
+  margin: 5px;
+  display: inline-block;
+  cursor: pointer;
+  background-color: white;
+}
+
+.bst-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.bst-node {
+  margin: 10px;
+  text-align: center;
+}
+
+.bst-children {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.bst-slot {
+  padding: 20px;
+  border: 2px dashed #ccc;
+  min-width: 100px;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.highlight {
+  border-color: #4caf50;
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
+.node-pool {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
