@@ -84,10 +84,17 @@ const Test = ({ randomNumbers }) => {
   };
 
   const handleDrop = (fromIndex, toIndex, position) => {
-    setDropdownPosition({ top: position.y, left: position.x });
+    const dropNodeElement = document.querySelectorAll(".tree-node-wrapper")[toIndex];
+    const nodeRect = dropNodeElement.getBoundingClientRect();
+  
+    setDropdownPosition({
+      top: nodeRect.top + window.scrollY,
+      left: nodeRect.left + window.scrollX,
+    });
+  
     setPendingMove({ fromColIndex: fromIndex, toColIndex: toIndex });
     setShowDropdown(true);
-  };
+  };  
 
   const handleOptionSelect = (option) => {
     const { fromColIndex, toColIndex } = pendingMove;
