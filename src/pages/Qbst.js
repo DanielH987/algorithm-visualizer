@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import BinarySearchTree from '../components/BinarySearchTree/BinarySearchTree';
 import Modal from '../components/Modal/Modal';
+import CorrectBinarySearchTree from '../components/BinarySearchTree/CorrectBinarySearchTree'; 
 
 const Qbst = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [randomNumbers, setRandomNumbers] = useState([]);
+  const [showCorrectTree, setShowCorrectTree] = useState(false); 
 
   // Function to generate an array of random integers
   const generateRandomNumbers = () => {
@@ -28,16 +30,27 @@ const Qbst = () => {
 
   const handleGenerateNew = () => {
     setRandomNumbers(generateRandomNumbers());
+    setShowCorrectTree(false); // Reset to hide the correct tree when generating new numbers
+  };
+
+  const handleShowAnswer = () => {
+    setShowCorrectTree(!showCorrectTree); // Toggle the correct tree
   };
 
   return (
     <div style={{ textAlign: 'center' }}>
       <h2>Preparation for Quiz QBST</h2>
 
-      <BinarySearchTree randomNumbers={randomNumbers} />
+      <div style={{ display: showCorrectTree ? 'none' : 'block' }}>
+        <BinarySearchTree randomNumbers={randomNumbers} />
+      </div>
+      
+      <div style={{ display: showCorrectTree ? 'block' : 'none' }}>
+        <CorrectBinarySearchTree randomNumbers={randomNumbers} />
+      </div>
 
       <button className='styled-button' onClick={handleGenerateNew} style={{ marginTop: '20px' }}>Generate New</button>
-      <button className='styled-button' onClick={() => {}} style={{ marginTop: '20px' }}>Show Answer</button>
+      <button className='styled-button' onClick={handleShowAnswer} style={{ marginTop: '20px' }}>{!showCorrectTree ? 'Show Answer' : 'Hide Answer'}</button>
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qbst Page!</h2>
