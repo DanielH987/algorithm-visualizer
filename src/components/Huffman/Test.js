@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
+import "./Test.css";
 
-// Helper function to create a new tree node
 function createNode(value, left = null, right = null) {
   return { value, left, right };
 }
@@ -10,47 +10,42 @@ const ItemTypes = {
   NODE: "node",
 };
 
-const TreeNode = ({ node, onSwapLeft, onSwapRight, onAddAdjacent, index, canAdd, swapNodes }) => {
+const TreeNode = ({ node, onDrop, index, isRootNode }) => {
   const [{ isDragging }, dragRef] = useDrag({
     type: ItemTypes.NODE,
     item: { index },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    canDrag: isRootNode,
   });
 
-  const [, dropRef] = useDrop({
+  const [{ isOver }, dropRef] = useDrop({
     accept: ItemTypes.NODE,
-    drop: (draggedItem) => {
-      if (draggedItem.index !== index) {
-        swapNodes(draggedItem.index, index);
+    drop: (draggedItem, monitor) => {
+      if (draggedItem.index !== index && isRootNode) {
+        const dropPosition = monitor.getClientOffset();
+        onDrop(draggedItem.index, index, dropPosition);
       }
     },
+    collect: (monitor) => ({
+      isOver: monitor.isOver(),
+    }),
+    canDrop: () => isRootNode,
   });
 
   if (!node) return null;
 
   return (
     <div
-      ref={(node) => dragRef(dropRef(node))}
+      ref={(node) => isRootNode && dragRef(dropRef(node))}
       className="tree-node-container"
-      style={{ opacity: isDragging ? 0.5 : 1 }}
     >
-      <div className="tree-node">{node.value}</div>
-      <div>
-        <button onClick={onSwapLeft} disabled={index === 0}>
-          Swap Left
-        </button>
-        <button onClick={onSwapRight} disabled={index === canAdd}>
-          Swap Right
-        </button>
-        {canAdd && <button onClick={onAddAdjacent}>Add Adjacent</button>}
-      </div>
+      <div className={`tree-node ${isOver ? "highlight" : ""}`}>{node.value}</div>
 
-      {/* Render Children Below */}
       <div className="tree-children">
-        {node.left && <TreeNode node={node.left} />}
-        {node.right && <TreeNode node={node.right} />}
+        {node.left && <TreeNode node={node.left} isRootNode={false} />}
+        {node.right && <TreeNode node={node.right} isRootNode={false} />}
       </div>
     </div>
   );
@@ -58,31 +53,94 @@ const TreeNode = ({ node, onSwapLeft, onSwapRight, onAddAdjacent, index, canAdd,
 
 const Test = ({ randomNumbers }) => {
   const [mainRow, setMainRow] = useState(randomNumbers.map((val) => createNode(val)));
+  const [history, setHistory] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+  const [pendingMove, setPendingMove] = useState({ fromColIndex: null, toColIndex: null });
 
-  // Sync state with updated props when randomNumbers changes
   useEffect(() => {
     setMainRow(randomNumbers.map((val) => createNode(val)));
   }, [randomNumbers]);
 
   const swapNodes = (index1, index2) => {
+    setHistory([...history, mainRow]);
     const newRow = [...mainRow];
     [newRow[index1], newRow[index2]] = [newRow[index2], newRow[index1]];
     setMainRow(newRow);
   };
 
-  const addNodes = (index) => {
-    if (index < 0 || index >= mainRow.length - 1) return;
+  const addNodes = (fromIndex, toIndex) => {
+    if (fromIndex === null || toIndex === null) return;
 
-    // Create a new parent node with the sum of two adjacent nodes
-    const leftNode = mainRow[index];
-    const rightNode = mainRow[index + 1];
+    const node1 = mainRow[fromIndex];
+    const node2 = mainRow[toIndex];
+
+    const leftNode = node1.value < node2.value ? node1 : node2;
+    const rightNode = node1.value < node2.value ? node2 : node1;
+
     const newNode = createNode(leftNode.value + rightNode.value, leftNode, rightNode);
 
-    // Update the main row
+    setHistory([...history, mainRow]);
     const newRow = [...mainRow];
-    newRow.splice(index, 2, newNode); // Replace two nodes with the new parent node
+    newRow.splice(Math.min(fromIndex, toIndex), 2, newNode);
     setMainRow(newRow);
   };
+
+  const handleDrop = (fromIndex, toIndex, position) => {
+    const dropNodeElement = document.querySelectorAll(".tree-node-wrapper")[toIndex];
+    const nodeRect = dropNodeElement.getBoundingClientRect();
+
+    setDropdownPosition({
+      top: nodeRect.top + window.scrollY,
+      left: nodeRect.left + window.scrollX,
+    });
+
+    setPendingMove({ fromColIndex: fromIndex, toColIndex: toIndex });
+    setShowDropdown(true);
+  };
+
+  const handleOptionSelect = (option) => {
+    const { fromColIndex, toColIndex } = pendingMove;
+    if (option === "Swap Nodes") {
+      swapNodes(fromColIndex, toColIndex);
+    } else if (option === "Add Nodes" && areNodesAdjacent(fromColIndex, toColIndex)) {
+      addNodes(fromColIndex, toColIndex);
+    }
+    setShowDropdown(false);
+  };
+
+  const areNodesAdjacent = (index1, index2) => {
+    return Math.abs(index1 - index2) === 1;
+  };
+
+  const undoAction = () => {
+    if (history.length > 0) {
+      const previousState = history[history.length - 1];
+      setMainRow(previousState);
+      setHistory(history.slice(0, -1));
+    }
+  };
+
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+
+    if (showDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDropdown]);
+
+  const { fromColIndex, toColIndex } = pendingMove;
+  const nodesAreAdjacent = fromColIndex !== null && toColIndex !== null && areNodesAdjacent(fromColIndex, toColIndex);
 
   return (
     <div>
@@ -93,14 +151,39 @@ const Test = ({ randomNumbers }) => {
             <TreeNode
               node={node}
               index={index}
-              canAdd={index < mainRow.length - 1}
-              onSwapLeft={() => index > 0 && swapNodes(index, index - 1)}
-              onSwapRight={() => index < mainRow.length - 1 && swapNodes(index, index + 1)}
-              onAddAdjacent={() => addNodes(index)}
-              swapNodes={swapNodes}
+              onDrop={handleDrop}
+              isRootNode={true}
             />
           </div>
         ))}
+      </div>
+
+      {showDropdown && (
+        <div
+          ref={dropdownRef}
+          className="dropdown-menu"
+          style={{
+            position: "absolute",
+            top: `${dropdownPosition.top}px`,
+            left: `${dropdownPosition.left}px`,
+          }}
+        >
+          <ul>
+            <li onClick={() => handleOptionSelect("Swap Nodes")}>Swap Nodes</li>
+            <li
+              onClick={() => handleOptionSelect("Add Nodes")}
+              className={!nodesAreAdjacent ? "disabled" : ""}
+            >
+              Add Nodes
+            </li>
+          </ul>
+        </div>
+      )}
+
+      <div className="parent-container">
+        <button onClick={undoAction} disabled={history.length === 0} className="styled-button">
+          Undo
+        </button>
       </div>
     </div>
   );
