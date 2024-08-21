@@ -4,8 +4,21 @@ import Modal from '../components/Modal/Modal';
 
 const Qbst = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [randomNumbers, setRandomNumbers] = useState([]);
 
+  // Function to generate an array of random integers
+  const generateRandomNumbers = () => {
+    const size = 7;
+    const min = 1;
+    const max = 50;
+    return Array.from({ length: size }, () =>
+      Math.floor(Math.random() * (max - min + 1)) + min
+    );
+  };
+
+  // Generate random numbers once when the component mounts
   useEffect(() => {
+    setRandomNumbers(generateRandomNumbers());
     setIsModalOpen(true);
   }, []);
 
@@ -13,12 +26,25 @@ const Qbst = () => {
     setIsModalOpen(false);
   };
 
+  const handleGenerateNew = () => {
+    setRandomNumbers(generateRandomNumbers());
+  };
+
   return (
-    <div>
-      <BinarySearchTree/>
+    <div style={{ textAlign: 'center' }}>
+      <h2>Preparation for Quiz QBST</h2>
+
+      <BinarySearchTree randomNumbers={randomNumbers} />
+
+      <button className='styled-button' onClick={handleGenerateNew} style={{ marginTop: '20px' }}>Generate New</button>
+      <button className='styled-button' onClick={() => {}} style={{ marginTop: '20px' }}>Show Answer</button>
+
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qbst Page!</h2>
-        <p>Coming out soon!</p>
+        <p>Insert the following numbers, in order, into an empty binary search tree. Draw the resulting tree.</p>
+        <p>You'll see a "Correct!" message once you've successfully completed the algorithm.</p>
+        <p>Click "Generate New" to create a new practice quiz.</p>
+        <p>Tap anywhere to close this message.</p>
       </Modal>
     </div>
   );
