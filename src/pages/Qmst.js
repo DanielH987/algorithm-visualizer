@@ -38,6 +38,7 @@ const Qmst = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [graphText, setGraphText] = useState('');
+  const [clickedNodes, setClickedNodes] = useState([]); // Store clicked nodes
 
   useEffect(() => {
     setIsModalOpen(true);
@@ -53,14 +54,27 @@ const Qmst = () => {
     setIsModalOpen(false);
   };
 
+  const handleNodeClick = (node) => {
+    setClickedNodes((prevNodes) => {
+      if (prevNodes.includes(node.id)) {
+        // Remove node if it's already clicked
+        return prevNodes.filter(n => n !== node.id);
+      } else {
+        // Add node if it's not clicked yet
+        return [...prevNodes, node.id];
+      }
+    });
+  };
+
   return (
     <div className="qmst-container">
       <div className="qmst-text-container">
         <h2>Preparation for Quiz QMST</h2>
         <pre className="qmst-pre">{graphText}</pre>
+        <div>Clicked Nodes: {clickedNodes.join(', ')}</div> {/* Display clicked nodes */}
       </div>
       <div className="qmst-graph-container">
-        <MinSpanTree nodes={graphData.nodes} links={graphData.links} />
+        <MinSpanTree nodes={graphData.nodes} links={graphData.links} onNodeClick={handleNodeClick} /> {/* Pass handler */}
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qmst Page!</h2>
