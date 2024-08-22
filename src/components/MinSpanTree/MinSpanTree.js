@@ -24,6 +24,7 @@ const GraphComponent = ({ nodes, links }) => {
         linkLabel={(link) => `Weight: ${link.weight}`}
         nodeAutoColorBy={null}
         enableZoomInteraction={false}
+        enablePanInteraction={false}  // Disable graph panning
         linkDirectionalParticles={0}
         nodeCanvasObject={(node, ctx, globalScale) => {
           const label = node.id;
