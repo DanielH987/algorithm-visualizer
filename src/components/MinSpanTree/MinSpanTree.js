@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
+import './MinSpanTree.css';
 
 const GraphComponent = () => {
   const graphRef = useRef();
@@ -39,7 +40,7 @@ const GraphComponent = () => {
   }, []);
 
   return (
-    <div style={{ width: '100%', height: '600px' }}>
+    <div className="graph-container">
       <ForceGraph2D
         ref={graphRef}
         graphData={{ nodes, links }}
