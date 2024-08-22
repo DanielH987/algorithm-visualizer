@@ -1,37 +1,60 @@
 .node {
-  padding: 10px;
-  border: 1px solid #333;
   margin: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
   display: inline-block;
+  line-height: 80px;
   cursor: pointer;
-  background-color: white;
+  transition: background-color 0.3s;
+  vertical-align: middle;
+}
+
+.node:hover {
+  background-color: #f0f0f0;
+}
+
+.node.placed {
+  cursor: default;
+}
+
+.node.placed:hover {
+  background-color: #fff;
 }
 
 .bst-container {
   display: flex;
   justify-content: center;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .bst-node {
-  margin: 10px;
+  margin: 5px;
   text-align: center;
+}
+
+.bst-slot {
+  padding: 2px;
+  border: 2px dashed #ccc;
+  min-width: 50px;
+  min-height: 30px;
+  height: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 
 .bst-children {
   display: flex;
   justify-content: space-between;
-  margin-top: 10px;
-}
-
-.bst-slot {
-  padding: 20px;
-  border: 2px dashed #ccc;
-  min-width: 100px;
-  min-height: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-top: 5px;
 }
 
 .highlight {
@@ -43,11 +66,10 @@
 }
 
 .node-pool {
-  display: flex;
+  display: inline-block;
   justify-content: center;
-  margin-bottom: 20px;
 }
 
 .correct-tree .bst-node {
-  pointer-events: none; /* Disable interactions */
+  pointer-events: none;
 }

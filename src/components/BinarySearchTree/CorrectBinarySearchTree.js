@@ -1,6 +1,6 @@
 import React from 'react';
+import './BinarySearchTree.css';
 
-// Helper function to insert nodes into the BST
 const insertIntoBST = (root, value) => {
   if (!root) return { value, left: null, right: null };
   if (value < root.value) root.left = insertIntoBST(root.left, value);
@@ -20,10 +20,10 @@ const renderTree = (node) => {
   if (!node) return null;
   return (
     <div className="bst-node">
-      <div>{node.value}</div>
+      <div className='node placed'>{node.value}</div>
       <div className="bst-children">
-        <div>{node.left ? renderTree(node.left) : 'Left Child'}</div>
-        <div>{node.right ? renderTree(node.right) : 'Right Child'}</div>
+        <div className='bst-slot'>{node.left ? renderTree(node.left) : 'Left Child'}</div>
+        <div className='bst-slot'>{node.right ? renderTree(node.right) : 'Right Child'}</div>
       </div>
     </div>
   );
