@@ -1,36 +1,11 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import './MinSpanTree.css';
 
-const GraphComponent = () => {
+const GraphComponent = ({ nodes, links }) => {
   const graphRef = useRef();
-
-  const nodes = [
-    { id: 'A' },
-    { id: 'B' },
-    { id: 'C' },
-    { id: 'D' },
-    { id: 'E' },
-    { id: 'F' },
-  ];
-
-  const links = [
-    { source: 'A', target: 'B', weight: 22 },
-    { source: 'A', target: 'C', weight: 20 },
-    { source: 'A', target: 'D', weight: 18 },
-    { source: 'A', target: 'E', weight: 21 },
-    { source: 'A', target: 'F', weight: 24 },
-    { source: 'B', target: 'C', weight: 22 },
-    { source: 'B', target: 'D', weight: 30 },
-    { source: 'B', target: 'E', weight: 14 },
-    { source: 'B', target: 'F', weight: 25 },
-    { source: 'C', target: 'D', weight: 13 },
-    { source: 'C', target: 'E', weight: 15 },
-    { source: 'C', target: 'F', weight: 14 },
-    { source: 'D', target: 'E', weight: 8 },
-    { source: 'D', target: 'F', weight: 18 },
-    { source: 'E', target: 'F', weight: 20 },
-  ];
+  const [clickedNodes, setClickedNodes] = useState({});
+  const [clickedLinks, setClickedLinks] = useState({});
 
   useEffect(() => {
     const graph = graphRef.current;
@@ -39,35 +14,97 @@ const GraphComponent = () => {
     graph.d3Force('charge').strength(-200);
   }, []);
 
+  const handleNodeClick = (node) => {
+    setClickedNodes((prevClickedNodes) => ({
+      ...prevClickedNodes,
+      [node.id]: !prevClickedNodes[node.id],
+    }));
+  };
+
+  const handleLinkClick = (link) => {
+    setClickedLinks((prevClickedLinks) => ({
+      ...prevClickedLinks,
+      [`${link.source.id}-${link.target.id}`]: !prevClickedLinks[`${link.source.id}-${link.target.id}`],
+    }));
+  };
+
   return (
     <div className="graph-container">
       <ForceGraph2D
         ref={graphRef}
         graphData={{ nodes, links }}
         nodeId="id"
-        linkWidth={link => Math.sqrt(link.weight)}
+        linkWidth={(link) => Math.sqrt(link.weight)}
         linkDirectionalArrowLength={5}
         linkDirectionalArrowRelPos={1}
-        linkLabel={link => `Weight: ${link.weight}`}
+        linkLabel={(link) => `Weight: ${link.weight}`}
         nodeAutoColorBy={null}
         enableZoomInteraction={false}
+        enablePanInteraction={false}
         linkDirectionalParticles={0}
+        enableNodeDrag={true}
+        onNodeClick={handleNodeClick}
+        onLinkClick={handleLinkClick}
         nodeCanvasObject={(node, ctx, globalScale) => {
           const label = node.id;
           const fontSize = 25 / globalScale;
           ctx.font = `${fontSize}px Sans-Serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillStyle = 'black';
+
+          ctx.fillStyle = 'white';
           ctx.beginPath();
           ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI, false);
-          ctx.fillStyle = 'white';
           ctx.fill();
+
           ctx.lineWidth = 1;
-          ctx.strokeStyle = 'black';
+          ctx.strokeStyle = clickedNodes[node.id] ? 'red' : 'black';
           ctx.stroke();
-          ctx.fillStyle = 'black';
+
+          ctx.fillStyle = clickedNodes[node.id] ? 'red' : 'black';
           ctx.fillText(label, node.x, node.y);
+        }}
+        linkCanvasObjectMode={() => 'after'}
+        linkCanvasObject={(link, ctx, globalScale) => {
+          const isClicked = clickedLinks[`${link.source.id}-${link.target.id}`];
+          
+          const lineWidth = isClicked ? 1.5 : 1;
+          ctx.lineWidth = lineWidth;
+
+          ctx.strokeStyle = isClicked ? 'red' : 'black';
+          const x0 = link.source.x;
+          const y0 = link.source.y;
+          const x1 = link.target.x;
+          const y1 = link.target.y;
+
+          ctx.beginPath();
+          ctx.moveTo(x0, y0);
+          ctx.lineTo(x1, y1);
+          ctx.stroke();
+
+          const arrowSize = 5 / globalScale;
+          const angle = Math.atan2(y1 - y0, x1 - x0);
+
+          ctx.fillStyle = isClicked ? 'red' : 'black';
+          ctx.beginPath();
+          ctx.moveTo(x1, y1);
+          ctx.lineTo(
+            x1 - arrowSize * Math.cos(angle - Math.PI / 6),
+            y1 - arrowSize * Math.sin(angle - Math.PI / 6)
+          );
+          ctx.lineTo(
+            x1 - arrowSize * Math.cos(angle + Math.PI / 6),
+            y1 - arrowSize * Math.sin(angle + Math.PI / 6)
+          );
+          ctx.lineTo(x1, y1);
+          ctx.closePath();
+          ctx.fill();
+        }}
+        nodePointerAreaPaint={(node, color, ctx) => {
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI, false);
+          ctx.fill();
         }}
       />
     </div>
