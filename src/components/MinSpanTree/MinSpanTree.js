@@ -1,55 +1,46 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 
 const GraphComponent = () => {
-  const fgRef = useRef();
+  // Define the vertices (nodes) and edges (links)
+  const nodes = [
+    { id: 'a' },
+    { id: 'b' },
+    { id: 'c' },
+    { id: 'd' },
+    { id: 'e' },
+    { id: 'f' },
+  ];
 
-  // Graph data
-  const graphData = {
-    nodes: [
-      { id: 'a' },
-      { id: 'b' },
-      { id: 'c' },
-      { id: 'd' },
-      { id: 'e' },
-      { id: 'f' },
-    ],
-    links: [
-      { source: 'a', target: 'b', weight: 22 },
-      { source: 'a', target: 'c', weight: 20 },
-      { source: 'a', target: 'd', weight: 18 },
-      { source: 'a', target: 'e', weight: 21 },
-      { source: 'a', target: 'f', weight: 24 },
-      { source: 'b', target: 'c', weight: 22 },
-      { source: 'b', target: 'd', weight: 30 },
-      { source: 'b', target: 'e', weight: 14 },
-      { source: 'b', target: 'f', weight: 25 },
-      { source: 'c', target: 'd', weight: 13 },
-      { source: 'c', target: 'e', weight: 15 },
-      { source: 'c', target: 'f', weight: 14 },
-      { source: 'd', target: 'e', weight: 8 },
-      { source: 'd', target: 'f', weight: 18 },
-      { source: 'e', target: 'f', weight: 20 },
-    ],
-  };
-
-  // Use effect to zoom to fit the graph on mount
-  useEffect(() => {
-    fgRef.current.zoomToFit(400, 100);
-  }, []);
+  const links = [
+    { source: 'a', target: 'b', weight: 22 },
+    { source: 'a', target: 'c', weight: 20 },
+    { source: 'a', target: 'd', weight: 18 },
+    { source: 'a', target: 'e', weight: 21 },
+    { source: 'a', target: 'f', weight: 24 },
+    { source: 'b', target: 'c', weight: 22 },
+    { source: 'b', target: 'd', weight: 30 },
+    { source: 'b', target: 'e', weight: 14 },
+    { source: 'b', target: 'f', weight: 25 },
+    { source: 'c', target: 'd', weight: 13 },
+    { source: 'c', target: 'e', weight: 15 },
+    { source: 'c', target: 'f', weight: 14 },
+    { source: 'd', target: 'e', weight: 8 },
+    { source: 'd', target: 'f', weight: 18 },
+    { source: 'e', target: 'f', weight: 20 },
+  ];
 
   return (
-    <div>
+    <div style={{ width: '100%', height: '600px' }}>
       <ForceGraph2D
-        ref={fgRef}
-        graphData={graphData}
-        nodeAutoColorBy="id"
-        linkDirectionalArrowLength={6}
+        graphData={{ nodes, links }}
+        nodeId="id"
+        linkWidth={link => Math.sqrt(link.weight)}
+        linkDirectionalArrowLength={5}
         linkDirectionalArrowRelPos={1}
-        linkCurvature={0.25}
-        linkWidth={link => Math.sqrt(link.weight) / 2} // Scales link width based on weight
-        linkLabel={link => `Weight: ${link.weight}`} // Shows weight on hover
-        nodeLabel={node => `Node: ${node.id}`} // Shows node id on hover
+        linkLabel={link => `Weight: ${link.weight}`}
+        nodeAutoColorBy="id"
+        enableZoomInteraction={false} // Disable zooming
       />
     </div>
   );
