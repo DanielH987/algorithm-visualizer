@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import './MinSpanTree.css';
 
-const GraphComponent = ({ nodes, links, onNodeClick }) => {
+const GraphComponent = ({ nodes, links, onNodeClick, onLinkClick }) => {
   const graphRef = useRef();
   const [clickedNodes, setClickedNodes] = useState({});
   const [clickedLinks, setClickedLinks] = useState({});
@@ -29,6 +29,10 @@ const GraphComponent = ({ nodes, links, onNodeClick }) => {
       ...prevClickedLinks,
       [`${link.source.id}-${link.target.id}`]: !prevClickedLinks[`${link.source.id}-${link.target.id}`],
     }));
+
+    if (onLinkClick) {
+      onLinkClick(link); // Call onLinkClick handler passed from Qmst
+    }
   };
 
   return (
