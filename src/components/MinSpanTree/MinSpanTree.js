@@ -39,8 +39,26 @@ const GraphComponent = () => {
         linkDirectionalArrowLength={5}
         linkDirectionalArrowRelPos={1}
         linkLabel={link => `Weight: ${link.weight}`}
-        nodeAutoColorBy="id"
+        nodeAutoColorBy={null} // Disable auto coloring
         enableZoomInteraction={false} // Disable zooming
+        linkDirectionalParticles={0}  // Disable moving particles
+        nodeCanvasObject={(node, ctx, globalScale) => {
+          const label = node.id;
+          const fontSize = 25 / globalScale;
+          ctx.font = `${fontSize}px Sans-Serif`;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = 'black'; // Text color
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 8, 0, 2 * Math.PI, false);
+          ctx.fillStyle = 'white'; // Circle color
+          ctx.fill();
+          ctx.lineWidth = 1; // Circle border width
+          ctx.strokeStyle = 'black'; // Circle border color
+          ctx.stroke();
+          ctx.fillStyle = 'black';
+          ctx.fillText(label, node.x, node.y);
+        }}
       />
     </div>
   );
