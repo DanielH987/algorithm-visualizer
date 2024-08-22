@@ -2,35 +2,8 @@ import React, { useEffect, useRef } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import './MinSpanTree.css';
 
-const GraphComponent = () => {
+const GraphComponent = ({ nodes, links }) => {
   const graphRef = useRef();
-
-  const nodes = [
-    { id: 'A' },
-    { id: 'B' },
-    { id: 'C' },
-    { id: 'D' },
-    { id: 'E' },
-    { id: 'F' },
-  ];
-
-  const links = [
-    { source: 'A', target: 'B', weight: 22 },
-    { source: 'A', target: 'C', weight: 20 },
-    { source: 'A', target: 'D', weight: 18 },
-    { source: 'A', target: 'E', weight: 21 },
-    { source: 'A', target: 'F', weight: 24 },
-    { source: 'B', target: 'C', weight: 22 },
-    { source: 'B', target: 'D', weight: 30 },
-    { source: 'B', target: 'E', weight: 14 },
-    { source: 'B', target: 'F', weight: 25 },
-    { source: 'C', target: 'D', weight: 13 },
-    { source: 'C', target: 'E', weight: 15 },
-    { source: 'C', target: 'F', weight: 14 },
-    { source: 'D', target: 'E', weight: 8 },
-    { source: 'D', target: 'F', weight: 18 },
-    { source: 'E', target: 'F', weight: 20 },
-  ];
 
   useEffect(() => {
     const graph = graphRef.current;
@@ -45,10 +18,10 @@ const GraphComponent = () => {
         ref={graphRef}
         graphData={{ nodes, links }}
         nodeId="id"
-        linkWidth={link => Math.sqrt(link.weight)}
+        linkWidth={(link) => Math.sqrt(link.weight)}
         linkDirectionalArrowLength={5}
         linkDirectionalArrowRelPos={1}
-        linkLabel={link => `Weight: ${link.weight}`}
+        linkLabel={(link) => `Weight: ${link.weight}`}
         nodeAutoColorBy={null}
         enableZoomInteraction={false}
         linkDirectionalParticles={0}
