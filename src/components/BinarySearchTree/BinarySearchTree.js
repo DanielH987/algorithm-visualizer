@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useDrag, useDrop } from 'react-dnd';
 import './BinarySearchTree.css';
 
-const Node = ({ value, isPlaced }) => {
+const Node = ({ id, value, isPlaced }) => {
   const [{ isDragging }, drag] = useDrag({
     type: 'NODE',
-    item: { value },
+    item: { id, value },
     canDrag: !isPlaced,
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
@@ -41,36 +41,37 @@ const BSTSlot = ({ acceptNode, children, highlight }) => {
   );
 };
 
-const BSTNode = ({ value, setTree, parentTree, placedNodes, setPlacedNodes }) => {
+const BSTNode = ({ id, value, setTree, parentTree, placedNodes, setPlacedNodes }) => {
   const [left, setLeft] = useState(null);
   const [right, setRight] = useState(null);
 
   const handleDropLeft = (item) => {
     if (!left) {
-      setLeft(item.value);
+      setLeft(item);
       updateTree(parentTree, value, item.value, 'left');
       setTree({ ...parentTree });
-      setPlacedNodes([...placedNodes, item.value]);
+      setPlacedNodes([...placedNodes, item.id]);
     }
   };
 
   const handleDropRight = (item) => {
     if (!right) {
-      setRight(item.value);
+      setRight(item);
       updateTree(parentTree, value, item.value, 'right');
       setTree({ ...parentTree });
-      setPlacedNodes([...placedNodes, item.value]);
+      setPlacedNodes([...placedNodes, item.id]);
     }
   };
 
   return (
     <div className="bst-node">
-      <Node value={value} isPlaced={true} />
+      <Node id={id} value={value} isPlaced={true} />
       <div className="bst-children">
         <BSTSlot acceptNode={handleDropLeft} highlight={true}>
           {left ? (
             <BSTNode
-              value={left}
+              id={left.id}
+              value={left.value}
               setTree={setTree}
               parentTree={parentTree}
               placedNodes={placedNodes}
@@ -83,7 +84,8 @@ const BSTNode = ({ value, setTree, parentTree, placedNodes, setPlacedNodes }) =>
         <BSTSlot acceptNode={handleDropRight} highlight={true}>
           {right ? (
             <BSTNode
-              value={right}
+              id={right.id}
+              value={right.value}
               setTree={setTree}
               parentTree={parentTree}
               placedNodes={placedNodes}
@@ -109,15 +111,13 @@ const updateTree = (tree, parentValue, childValue, direction) => {
   }
 };
 
-const BST = ({ randomNumbers, setUserTree }) => {
+const BST = ({ randomNumbers, setUserTree, placedNodes, setPlacedNodes }) => {
   const [root, setRoot] = useState(null);
   const [treeStructure, setTreeStructure] = useState(null);
-  const [placedNodes, setPlacedNodes] = useState([]);
 
   useEffect(() => {
     setRoot(null);
-    setUserTree(null);
-    setPlacedNodes([]);
+    setTreeStructure(null);
   }, [randomNumbers]);
 
   const handleDropRoot = (item) => {
@@ -125,13 +125,14 @@ const BST = ({ randomNumbers, setUserTree }) => {
     setRoot(item.value);
     setTreeStructure(newTree);
     setUserTree(newTree);
-    setPlacedNodes([...placedNodes, item.value]);
+    setPlacedNodes([...placedNodes, item.id]);
   };
 
   return (
     <div className="bst-container">
       {root ? (
         <BSTNode
+          id={root}
           value={root}
           setTree={setUserTree}
           parentTree={treeStructure}
@@ -148,10 +149,12 @@ const BST = ({ randomNumbers, setUserTree }) => {
 };
 
 const NodePool = ({ nodes, placedNodes }) => {
+  const availableNodes = nodes.filter((node) => !placedNodes.includes(node.id));
+
   return (
     <div className="node-pool">
-      {nodes.map((value, index) => (
-        <Node key={index} value={value} isPlaced={placedNodes.includes(value)} />
+      {availableNodes.map((node) => (
+        <Node key={node.id} id={node.id} value={node.value} isPlaced={false} />
       ))}
     </div>
   );
@@ -160,10 +163,21 @@ const NodePool = ({ nodes, placedNodes }) => {
 const BinarySearchTree = ({ randomNumbers, setUserTree }) => {
   const [placedNodes, setPlacedNodes] = useState([]);
 
+  const nodesWithIds = randomNumbers.map((value, index) => ({ id: index, value }));
+
+  useEffect(() => {
+    setPlacedNodes([]);
+  }, [randomNumbers]);
+
   return (
     <div>
-      <NodePool nodes={randomNumbers} placedNodes={placedNodes} />
-      <BST randomNumbers={randomNumbers} setUserTree={setUserTree} />
+      <NodePool nodes={nodesWithIds} placedNodes={placedNodes} />
+      <BST
+        randomNumbers={randomNumbers}
+        setUserTree={setUserTree}
+        placedNodes={placedNodes}
+        setPlacedNodes={setPlacedNodes}
+      />
     </div>
   );
 };
