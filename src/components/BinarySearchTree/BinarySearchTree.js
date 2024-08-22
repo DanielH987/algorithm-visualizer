@@ -141,7 +141,7 @@ const BST = ({ randomNumbers, setUserTree, placedNodes, setPlacedNodes }) => {
         />
       ) : (
         <BSTSlot acceptNode={handleDropRoot} highlight={true}>
-          Place Root Node
+          Place Root Node here
         </BSTSlot>
       )}
     </div>
