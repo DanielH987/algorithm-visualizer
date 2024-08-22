@@ -26,22 +26,33 @@ const GraphComponent = ({ nodes, links }) => {
         enableZoomInteraction={false}
         enablePanInteraction={false}
         linkDirectionalParticles={0}
+        enableNodeDrag={true} // Enabling node drag
         nodeCanvasObject={(node, ctx, globalScale) => {
           const label = node.id;
           const fontSize = 25 / globalScale;
           ctx.font = `${fontSize}px Sans-Serif`;
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
-          ctx.fillStyle = 'black';
+
+          // Draw the node circle
+          ctx.fillStyle = 'white';
           ctx.beginPath();
           ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI, false);
-          ctx.fillStyle = 'white';
           ctx.fill();
           ctx.lineWidth = 1;
           ctx.strokeStyle = 'black';
           ctx.stroke();
+
+          // Draw the node label
           ctx.fillStyle = 'black';
           ctx.fillText(label, node.x, node.y);
+        }}
+        nodePointerAreaPaint={(node, color, ctx) => {
+          // This handles making the entire node area interactive (including dragging)
+          ctx.fillStyle = color;
+          ctx.beginPath();
+          ctx.arc(node.x, node.y, 15, 0, 2 * Math.PI, false);
+          ctx.fill();
         }}
       />
     </div>
