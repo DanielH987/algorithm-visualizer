@@ -43,6 +43,7 @@ const Qbst = () => {
     if (userTree.value !== correctTree.value) return false;
     return compareTrees(userTree.left, correctTree.left) && compareTrees(userTree.right, correctTree.right);
   };
+        <p>Arrange the following numbers by dragging and dropping them into an empty binary search tree. Build the tree correctly to complete the task.</p>
 
   useEffect(() => {
     if (userTree) {
@@ -73,7 +74,7 @@ const Qbst = () => {
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qbst Page!</h2>
-        <p>Insert the following numbers, in order, into an empty binary search tree. Draw the resulting tree.</p>
+        <p>Arrange the following numbers by dragging and dropping them into an empty binary search tree. Build the tree correctly to complete the task.</p>
         <p>You'll see a "Correct!" message once you've successfully completed the algorithm.</p>
         <p>Click "Generate New" to create a new practice quiz.</p>
         <p>Tap anywhere to close this message.</p>
