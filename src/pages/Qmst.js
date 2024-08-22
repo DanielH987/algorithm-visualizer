@@ -38,7 +38,8 @@ const Qmst = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [graphData, setGraphData] = useState({ nodes: [], links: [] });
   const [graphText, setGraphText] = useState('');
-  const [clickedNodes, setClickedNodes] = useState([]); // Store clicked nodes
+  const [clickedNodes, setClickedNodes] = useState([]);
+  const [clickedLinks, setClickedLinks] = useState([]); // Store clicked links and weights
 
   useEffect(() => {
     setIsModalOpen(true);
@@ -57,11 +58,20 @@ const Qmst = () => {
   const handleNodeClick = (node) => {
     setClickedNodes((prevNodes) => {
       if (prevNodes.includes(node.id)) {
-        // Remove node if it's already clicked
         return prevNodes.filter(n => n !== node.id);
       } else {
-        // Add node if it's not clicked yet
         return [...prevNodes, node.id];
+      }
+    });
+  };
+
+  const handleLinkClick = (link) => {
+    const linkInfo = `${link.source.id}-${link.target.id} (Weight: ${link.weight})`;
+    setClickedLinks((prevLinks) => {
+      if (prevLinks.includes(linkInfo)) {
+        return prevLinks.filter(l => l !== linkInfo);
+      } else {
+        return [...prevLinks, linkInfo];
       }
     });
   };
@@ -71,10 +81,16 @@ const Qmst = () => {
       <div className="qmst-text-container">
         <h2>Preparation for Quiz QMST</h2>
         <pre className="qmst-pre">{graphText}</pre>
-        <div>Clicked Nodes: {clickedNodes.join(', ')}</div> {/* Display clicked nodes */}
+        <div>Clicked Nodes: {clickedNodes.join(', ')}</div>
+        <div>Clicked Links: {clickedLinks.join(', ')}</div> {/* Display clicked links */}
       </div>
       <div className="qmst-graph-container">
-        <MinSpanTree nodes={graphData.nodes} links={graphData.links} onNodeClick={handleNodeClick} /> {/* Pass handler */}
+        <MinSpanTree
+          nodes={graphData.nodes}
+          links={graphData.links}
+          onNodeClick={handleNodeClick}
+          onLinkClick={handleLinkClick} // Pass the link click handler
+        />
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qmst Page!</h2>
