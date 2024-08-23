@@ -27,7 +27,7 @@ const GraphComponent = ({ nodes, links, onNodeClick, onLinkClick, resetGraph }) 
       [node.id]: !prevClickedNodes[node.id],
     }));
     if (onNodeClick) {
-      onNodeClick(node); // Call onNodeClick handler passed from Qmst
+      onNodeClick(node);
     }
   };
 
@@ -38,7 +38,7 @@ const GraphComponent = ({ nodes, links, onNodeClick, onLinkClick, resetGraph }) 
     }));
 
     if (onLinkClick) {
-      onLinkClick(link); // Call onLinkClick handler passed from Qmst
+      onLinkClick(link);
     }
   };
 
