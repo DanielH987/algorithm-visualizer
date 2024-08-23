@@ -162,7 +162,7 @@ const Qmst = () => {
 
   const handleShowAnswer = () => {
     if (correctMstWeight !== null) {
-      setTotalWeight(correctMstWeight);
+      setCorrectMstWeight(correctMstWeight);
       setShowAnswer(true);
     }
   };
@@ -191,7 +191,7 @@ const Qmst = () => {
           )}
         </div>
         {showAnswer && (
-          <h3 style={{ textAlign: 'center' }}>Total Weight: {correctMstWeight}</h3>
+          <h3 className={totalWeight === correctMstWeight ? 'correct' : 'incorrect'} style={{ textAlign: 'center' }}>Total Weight: {correctMstWeight}</h3>
         )}
         <div className="qmst-columns">
           <div className="qmst-left-column">
