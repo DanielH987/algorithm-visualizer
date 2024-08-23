@@ -192,6 +192,7 @@ const Qmst = () => {
             </button>
           )}
         </div>
+        {totalWeight === correctMstWeight ? <h3 className='correct'>Correct!</h3> : ''}
         {showAnswer && (
           <h3 className={totalWeight === correctMstWeight ? 'correct' : 'incorrect'} style={{ textAlign: 'center' }}>Total Weight: {correctMstWeight}</h3>
         )}
@@ -227,7 +228,10 @@ const Qmst = () => {
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qmst Page!</h2>
-        <p>Coming out soon!</p>
+        <p>Given a list of edges in vertex.vertex.weight format, discover a minimum spanning tree.</p>
+        <p>You'll see a "Correct!" message once you've successfully completed the algorithm.</p>
+        <p>Click "Generate New" to create a new practice quiz.</p>
+        <p>Tap anywhere to close this message.</p>
       </Modal>
     </div>
   );
