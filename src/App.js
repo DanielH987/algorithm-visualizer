@@ -23,12 +23,12 @@ const App = () => {
         <main>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/qhp" element={<Qhp />} />
-            <Route path="/qqp" element={<Qqp />} />
-            <Route path="/qbst" element={<Qbst />} />
-            <Route path="/qlcs" element={<Qlcs />} />
-            <Route path="/qhuf" element={<Qhuf />} />
-            <Route path="/qmst" element={<Qmst />} />
+            <Route path="/build-max-heap" element={<Qhp />} />
+            <Route path="/partition" element={<Qqp />} />
+            <Route path="/binary-search-tree" element={<Qbst />} />
+            <Route path="/longest-common-subsequence" element={<Qlcs />} />
+            <Route path="/huffman-encoding" element={<Qhuf />} />
+            <Route path="/minimum-spanning-tree" element={<Qmst />} />
           </Routes>
         </main>
         <Footer />
