@@ -1,9 +1,14 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
     <header>
-      <h1>Algorithm Visualizer</h1>
+      <h1>
+        <Link to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          Algorithm Visualizer
+        </Link>
+      </h1>
     </header>
   );
 };
