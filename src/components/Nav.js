@@ -16,7 +16,6 @@ const Nav = () => {
         <div></div>
       </div>
       <ul className={isOpen ? 'show' : ''}>
-        <li><Link to="/" onClick={toggleNav}>Home</Link></li>
         <li><Link to="/qhp" onClick={toggleNav}>QHP</Link></li>
         <li><Link to="/qqp" onClick={toggleNav}>QQP</Link></li>
         <li><Link to="/qbst" onClick={toggleNav}>QBST</Link></li>
