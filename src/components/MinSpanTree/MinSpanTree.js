@@ -2,10 +2,17 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ForceGraph2D } from 'react-force-graph';
 import './MinSpanTree.css';
 
-const GraphComponent = ({ nodes, links, onNodeClick, onLinkClick }) => {
+const GraphComponent = ({ nodes, links, onNodeClick, onLinkClick, resetGraph }) => {
   const graphRef = useRef();
   const [clickedNodes, setClickedNodes] = useState({});
   const [clickedLinks, setClickedLinks] = useState({});
+
+  useEffect(() => {
+    if (resetGraph) {
+      setClickedNodes({});
+      setClickedLinks({});
+    }
+  }, [resetGraph]);
 
   useEffect(() => {
     const graph = graphRef.current;
