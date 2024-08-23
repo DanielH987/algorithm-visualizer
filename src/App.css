@@ -1,5 +1,5 @@
 html, body, #root {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 0;
   padding: 0;
   height: 100%;
@@ -41,10 +41,17 @@ nav ul li a {
   padding: 1em;
   display: block;
   text-decoration: none;
+  font-size: 1.1em;
+  letter-spacing: 0.05em;
+  transition: color 0.3s ease, background-color 0.3s ease;
+  border-radius: 10px;
 }
 
 nav ul li a:hover {
   background-color: #575757;
+  color: #f1f1f1;
+  border-radius: 10px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 header, nav, footer {
