@@ -104,6 +104,7 @@ const Qmst = () => {
   const [totalWeight, setTotalWeight] = useState(0);
   const [correctMstWeight, setCorrectMstWeight] = useState(null);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [resetGraph, setResetGraph] = useState(null);
 
   useEffect(() => {
     setIsModalOpen(true);
@@ -112,13 +113,14 @@ const Qmst = () => {
 
   const generateNewGraph = () => {
     const { nodes, links } = generateGraphData(6);
-    console.log(JSON.stringify(nodes), JSON.stringify(links));
     setGraphData({ nodes, links });
     const formattedText = formatGraphText(nodes, links);
     setGraphText(formattedText);
     setClickedVertices([]);
     setClickedEdges([]);
     setTotalWeight(0);
+
+    setResetGraph(Date.now());
 
     const { totalWeight: mstTotalWeight } = findMST({ nodes, links });
     setCorrectMstWeight(mstTotalWeight);
@@ -220,6 +222,7 @@ const Qmst = () => {
           links={graphData.links}
           onNodeClick={handleVertxClick}
           onLinkClick={handleEdgeClick}
+          resetGraph={resetGraph}
         />
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
