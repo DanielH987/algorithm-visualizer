@@ -228,9 +228,10 @@ const Qmst = () => {
       </div>
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qmst Page!</h2>
-        <p>Given a list of edges in vertex.vertex.weight format, discover a minimum spanning tree.</p>
-        <p>You'll see a "Correct!" message once you've successfully completed the algorithm.</p>
-        <p>Click "Generate New" to create a new practice quiz.</p>
+        <p>Given a list of edges in <i>vertex.vertex.weight</i> format, discover a <strong>Minimum Spanning Tree (MST)</strong>.</p>
+        <p>You can click on nodes or edges to <strong>highlight them</strong>. Highlighted nodes and edges will be listed on the page, and the <strong>total weight</strong> will be automatically calculated.</p>
+        <p>You'll see a <strong>"Correct!"</strong> message once you've successfully completed the algorithm.</p>
+        <p>Click <strong>"Generate New"</strong> to create a new practice quiz.</p>
         <p>Tap anywhere to close this message.</p>
       </Modal>
     </div>
