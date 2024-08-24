@@ -74,9 +74,9 @@ const Qbst = () => {
 
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the Qbst Page!</h2>
-        <p>Arrange the following numbers by dragging and dropping them into an empty binary search tree. Build the tree correctly to complete the task.</p>
-        <p>You'll see a "Correct!" message once you've successfully completed the algorithm.</p>
-        <p>Click "Generate New" to create a new practice quiz.</p>
+        <p>Arrange the following numbers by <strong>dragging</strong> and <strong>dropping</strong> them into an empty binary search tree. Build the tree correctly to complete the task.</p>
+        <p>You'll see a <strong>"Correct!"</strong> message once you've successfully completed the algorithm.</p>
+        <p>Click <strong>"Generate New"</strong> to create a new practice quiz.</p>
         <p>Tap anywhere to close this message.</p>
       </Modal>
     </div>
