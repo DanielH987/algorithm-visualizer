@@ -19,9 +19,9 @@ const Qqp = () => {
       <QuicksortPartition />
       <Modal isOpen={isModalOpen} onClose={handleCloseModal}>
         <h2>Welcome to the QQP Page!</h2>
-        <p>Use the PARTITION algorithm to transform the arrays of numbers provided, using the last number as the pivot. After arranging the numbers, click the "Show Answer" button to check your work.</p>
-        <p>You'll see a "Correct!" message once you've successfully completed the algorithm. Press the <FaEyeSlash /> button for help.</p>
-        <p>Click "Generate New List" to create a new practice quiz.</p>
+        <p>Use the <strong>PARTITION</strong> algorithm to rearrange the array of numbers provided. The last number in the array will serve as the pivot. After arranging the numbers, click the <strong>"Show Answer"</strong> button to check your work.</p>
+        <p>You'll see a <strong>"Correct!"</strong> message once you've successfully completed the algorithm. Press the <FaEyeSlash /> button for help.</p>
+        <p>Click <strong>"Generate New List"</strong> to create a new practice quiz.</p>
         <p>Tap anywhere to close this message.</p>
       </Modal>
     </div>
