@@ -4,7 +4,7 @@
 
 ## Demo
 
-Check out the live demo here: [https://cs301-algorithm-visualizer.vercel.app/]
+Check out the live demo here: [Algorithm Visualizer](https://cs301-algorithm-visualizer.vercel.app/)
 
 ## Features
 
@@ -17,22 +17,24 @@ Check out the live demo here: [https://cs301-algorithm-visualizer.vercel.app/]
 
 1. Visit the [live website](https://cs301-algorithm-visualizer.vercel.app/).
 2. Select an algorithm from the list.
-3. Use the provided controls to adjust parameters and watch the algorithm in action.
-4. Pause, rewind, and step through the algorithm to understand each step in detail.
+3. Practice each algorithm
 
-## Screenshots
-
-(Add screenshots or GIFs of your app in action here.)
 
 ## Technologies Used
 
 - **React** for the front-end.
 - **Vercel** for deployment and hosting.
-- **D3.js/Canvas** (or whatever library you're using for the visualizations).
 
 ## Contributing
 
-Currently, this project is deployed for public use and not open to direct contributions. However, feel free to reach out with suggestions or ideas!
+Contributions are welcome! If you'd like to contribute to this project:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature-branch`).
+3. Make your changes.
+4. Commit your changes (`git commit -m 'Add new feature'`).
+5. Push to the branch (`git push origin feature-branch`).
+6. Open a pull request.
 
 ## License
 
