@@ -231,7 +231,6 @@ const LongCommonSub = () => {
             <h2>Preparation for Quiz QLCS</h2>
             <h3>{string1} and {string2}</h3>
             <div className="slider-container">
-                <label>Choose Length: {stringLength}</label>
                 <input 
                     type="range" 
                     min="3" 
