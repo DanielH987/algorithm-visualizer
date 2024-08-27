@@ -46,8 +46,9 @@ const computeLCS = (string1, string2) => {
 };
 
 const LongCommonSub = () => {
-    const numRows = 9;
-    const numCols = 9;
+    const [stringLength, setStringLength] = useState(7);
+    const numRows = stringLength + 2; // Adjust the number of rows based on string length
+    const numCols = stringLength + 2; // Adjust the number of columns based on string length
 
     const [string1, setString1] = useState('');
     const [string2, setString2] = useState('');
@@ -70,8 +71,8 @@ const LongCommonSub = () => {
     );
 
     const generateNewStrings = () => {
-        setString1(generateRandomString(7));
-        setString2(generateRandomString(7));
+        setString1(generateRandomString(stringLength));
+        setString2(generateRandomString(stringLength));
         setVerificationResult('');
         setShowAnswer(false);
         setUserLcs('');
@@ -81,12 +82,12 @@ const LongCommonSub = () => {
         setTableData([]);
         setCorrectTableData([]);
         setSelectValues(Array.from({ length: numRows }, () => Array(numCols).fill(null)));
-        setHighlightedCells([]); 
+        setHighlightedCells([]);
     };
 
     useEffect(() => {
         generateNewStrings();
-    }, []);
+    }, [stringLength]); // Regenerate strings whenever the string length changes
 
     useEffect(() => {
         if (string1 && string2) {
@@ -153,7 +154,7 @@ const LongCommonSub = () => {
             setLcs(computedLcs);
             setLcsLength(computedLcs.length);
         }
-    }, [string1, string2, numRows, numCols]);    
+    }, [string1, string2, numRows, numCols]);
 
     useEffect(() => {
         computeBackTrack();
@@ -221,10 +222,24 @@ const LongCommonSub = () => {
         setAreCellsDisabled((prevDisabled) => !prevDisabled);
     };
 
+    const handleSliderChange = (e) => {
+        setStringLength(parseInt(e.target.value, 10));
+    };
+
     return (
         <div className="container">
             <h2>Preparation for Quiz QLCS</h2>
             <h3>{string1} and {string2}</h3>
+            <div className="slider-container">
+                <label>Choose Length: {stringLength}</label>
+                <input 
+                    type="range" 
+                    min="3" 
+                    max="7" 
+                    value={stringLength} 
+                    onChange={handleSliderChange} 
+                />
+            </div>
             <div className="button-container">
                 <button className="styled-button" onClick={toggleBox}>
                     {boxStyleOverride === 'toggle-box' ? <FaEyeSlash /> : <FaEye />}
