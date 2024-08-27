@@ -12,6 +12,7 @@ import Qbst from './pages/Qbst';
 import Qqp from './pages/Qqp';
 import Qhuf from './pages/Qhuf';
 import Qmst from './pages/Qmst';
+import NotFound from './pages/NotFound';
 import './App.css';
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
             <Route path="/longest-common-subsequence" element={<Qlcs />} />
             <Route path="/huffman-encoding" element={<Qhuf />} />
             <Route path="/minimum-spanning-tree" element={<Qmst />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />
