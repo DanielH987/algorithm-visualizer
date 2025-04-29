@@ -2,6 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Analytics } from "@vercel/analytics/react"
 import Header from './components/Header';
 import Nav from './components/Nav';
 import Footer from './components/Footer';
@@ -34,6 +35,7 @@ const App = () => {
           </Routes>
         </main>
         <Footer />
+        <Analytics />
       </Router>
     </DndProvider>
   );
