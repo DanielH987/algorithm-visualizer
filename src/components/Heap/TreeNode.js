@@ -35,6 +35,29 @@ const TreeNode = ({ node, index, leftChild, rightChild, moveNode }) => {
         </div>
       </div>
       <div className="tree-children">
+        {/* SVG branch lines – straight diagonals from parent to children */}
+        <svg className="branch" width="100%" height="30" xmlns="http://www.w3.org/2000/svg">
+            {leftChild && (
+              <line
+                x1="50%"
+                y1="0"
+                x2={rightChild ? "25%" : "50%"}
+                y2="30"
+                stroke="#111"
+                strokeWidth={2}
+              />
+            )}
+            {rightChild && (
+              <line
+                x1="50%"
+                y1="0"
+                x2={leftChild ? "75%" : "50%"}
+                y2="30"
+                stroke="#111"
+                strokeWidth={2}
+              />
+            )}
+          </svg>
         {leftChild && (
           <TreeNode
             node={leftChild.node}

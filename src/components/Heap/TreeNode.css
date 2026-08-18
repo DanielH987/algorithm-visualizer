@@ -1,3 +1,4 @@
+/* Tree node container */
 .tree-node-container {
   display: flex;
   flex-direction: column;
@@ -5,8 +6,9 @@
   position: relative;
 }
 
+/* The visual node – a circle with the value inside */
 .tree-node {
-  margin: 10px;
+  margin: 0 10px;
   padding: 20px;
   border: 1px solid #ccc;
   text-align: center;
@@ -30,18 +32,30 @@
   border-width: 2px;
 }
 
+/* Children wrapper – each child gets an equal horizontal slice */
 .tree-children {
   display: flex;
-  justify-content: space-between;
   width: 100%;
+  margin-top: 30px; /* space for branch lines */
+  position: relative; /* anchor for SVG */
 }
 
-.tree-children::before {
+.tree-children > .tree-node-container {
+  flex: 1; /* each child occupies half the width */
+}
+
+/* Straight‑line branches drawn with an SVG overlay */
+.branch {
+  position: absolute;
+  top: -30px;   /* align line with node bottom */
   left: 0;
-  border-right: 1px solid #ccc;
+  width: 100%;
+  height: 30px;
+  pointer-events: none; /* ignore mouse events */
+  z-index: 2; /* ensure line sits above nodes */
 }
 
-.tree-children::after {
-  right: 0;
-  border-left: 1px solid #ccc;
+.branch line {
+  stroke: #111; /* darker than #333 */
+  stroke-width: 2;
 }
