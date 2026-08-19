@@ -10,6 +10,14 @@ const ItemTypes = {
   NODE: "node",
 };
 
+// Count leaf nodes in a Huffman subtree
+function countLeaves(node) {
+  if (!node) return 0;
+  if (!node.left && !node.right) return 1;
+  return countLeaves(node.left) + countLeaves(node.right);
+}
+
+
 const TreeNode = ({ node, onDrop, index, isRootNode }) => {
   const [, dragRef] = useDrag({
     type: ItemTypes.NODE,
@@ -44,6 +52,45 @@ const TreeNode = ({ node, onDrop, index, isRootNode }) => {
       <div className={`tree-node ${isOver ? "highlight" : ""}`}>{node.value}</div>
       <div className="tree-character">{node.character}</div>
       <div className="tree-children">
+        {/* Calculate leaf counts for dynamic branch positioning */}
+        {(() => {
+          const totalLeaves = countLeaves(node);
+          const leftLeaves = node.left ? countLeaves(node.left) : 0;
+          const rightLeaves = node.right ? countLeaves(node.right) : 0;
+          const leftX = leftLeaves ? (leftLeaves / (2 * totalLeaves)) * 100 : null;
+          const rightX = rightLeaves
+            ? ((leftLeaves + rightLeaves / 2) / totalLeaves) * 100
+            : null;
+          return (
+            <svg
+              className="branch"
+              width="100%"
+              height="20"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {node.left && (
+                <line
+                  x1="50%"
+                  y1="0"
+                  x2={`${leftX}%`}
+                  y2="20"
+                  stroke="#111"
+                  strokeWidth={2}
+                />
+              )}
+              {node.right && (
+                <line
+                  x1="50%"
+                  y1="0"
+                  x2={`${rightX}%`}
+                  y2="20"
+                  stroke="#111"
+                  strokeWidth={2}
+                />
+              )}
+            </svg>
+          );
+        })()}
         {node.left && <TreeNode node={node.left} isRootNode={false} />}
         {node.right && <TreeNode node={node.right} isRootNode={false} />}
       </div>
