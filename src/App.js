@@ -1,4 +1,5 @@
 import React, { Suspense, lazy } from 'react';
+import LoadingSpinner from './components/Loading/LoadingSpinner';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -27,7 +28,7 @@ const App = () => {
         <Header />
         <Nav />
         <main>
-          <Suspense fallback={<div>Loading…</div>}>
+          <Suspense fallback={<LoadingSpinner />}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/build-max-heap" element={<Qhp />} />
