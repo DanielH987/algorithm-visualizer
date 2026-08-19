@@ -87,6 +87,9 @@ const LongCommonSub = () => {
 
     useEffect(() => {
         generateNewStrings();
+        // Intentionally only re-run when stringLength changes; adding
+        // generateNewStrings would cause an infinite re-render loop.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [stringLength]); // Regenerate strings whenever the string length changes
 
     useEffect(() => {
@@ -158,6 +161,8 @@ const LongCommonSub = () => {
 
     useEffect(() => {
         computeBackTrack();
+        // Intentionally only re-run when selectValues/correctTableData change.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectValues, correctTableData]);
 
     useEffect(() => {

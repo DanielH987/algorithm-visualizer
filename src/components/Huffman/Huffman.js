@@ -111,6 +111,7 @@ const Huffman = ({
                                             );
                                         }
                                     }
+                                    return null;
                                 })}
                             </tr>
                         ))}

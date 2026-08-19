@@ -53,6 +53,8 @@ const Qbst = () => {
       console.log("Is tree correct?", isCorrect);
       setIsTreeCorrect(isCorrect);
     }
+    // compareTrees is a non-memoized local; adding it would re-run every render.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userTree, randomNumbers]);
 
   return (

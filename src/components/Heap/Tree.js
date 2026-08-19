@@ -85,6 +85,8 @@ const Tree = () => {
       setNodes(updatedNodes);
       verifyAnswer(updatedNodes);
     },
+    // verifyAnswer is defined below; adding it here would crash at render (TDZ).
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [nodes],
   );
 

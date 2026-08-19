@@ -11,7 +11,7 @@ const ItemTypes = {
 };
 
 const TreeNode = ({ node, onDrop, index, isRootNode }) => {
-  const [{ isDragging }, dragRef] = useDrag({
+  const [, dragRef] = useDrag({
     type: ItemTypes.NODE,
     item: { index },
     collect: (monitor) => ({

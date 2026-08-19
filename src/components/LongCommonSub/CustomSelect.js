@@ -18,6 +18,8 @@ const CustomSelect = ({ selectValue, disabled }) => {
             setSelectedOption(option);
             setIsIconSelected(!!option);
         }
+        // dropdownOptions is static; only re-run when selectValue changes.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [selectValue]);
 
     const handleSelectChange = (selectedOption) => {
