@@ -6,6 +6,7 @@
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
+  z-index: 1000;
   align-items: center;
   justify-content: center;
 }
@@ -15,4 +16,5 @@
   padding: 20px;
   border-radius: 8px;
   position: relative;
+  z-index: 1001;
 }
